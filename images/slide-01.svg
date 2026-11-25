@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a2540"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="960" rx="32" fill="url(#bg)"/>
+  <rect width="800" height="960" rx="32" fill="url(#grid)"/>
+  <circle cx="660" cy="150" r="180" fill="#60a5fa" opacity="0.14"/>
+  <circle cx="140" cy="800" r="220" fill="#a78bfa" opacity="0.12"/>
+  
+    <g transform="translate(400,450)">
+      <path d="M0,-230 L190,-155 L190,30 C190,155 95,235 0,275 C-95,235 -190,155 -190,30 L-190,-155 Z" fill="rgba(255,255,255,0.08)" stroke="url(#ac)" stroke-width="6"/>
+      <path d="M0,-185 L145,-125 L145,25 C145,125 70,190 0,222 C-70,190 -145,125 -145,25 L-145,-125 Z" fill="rgba(96,165,250,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+      <line x1="0" y1="-110" x2="0" y2="130" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+      <line x1="-105" y1="-65" x2="105" y2="-65" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+      <line x1="-55" y1="130" x2="55" y2="130" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+      <path d="M-105,-65 L-140,25 L-70,25 Z" fill="none" stroke="#93c5fd" stroke-width="3"/>
+      <path d="M-145,25 Q-105,65 -65,25 Z" fill="#60a5fa" opacity="0.85"/>
+      <path d="M105,-65 L70,25 L140,25 Z" fill="none" stroke="#c4b5fd" stroke-width="3"/>
+      <path d="M65,25 Q105,65 145,25 Z" fill="#a78bfa" opacity="0.85"/>
+      <circle cx="0" cy="-110" r="14" fill="#fbbf24"/>
+    </g>
+  
+  <rect x="44" y="40" width="320" height="46" rx="23" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.22)"/>
+  <text x="204" y="69" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#ffffff" letter-spacing="1.4">BÀI 5 · PHÁP LUẬT</text>
+  <rect x="44" y="838" width="712" height="80" rx="18" fill="rgba(10,16,32,0.58)" stroke="rgba(255,255,255,0.18)"/>
+  <text x="400" y="886" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="22" font-weight="700" fill="#ffffff">BẢO VỆ NHÂN PHẨM &amp; DANH DỰ CON NGƯỜI</text>
+</svg>

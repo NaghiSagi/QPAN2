@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f1629"/>
+      <stop offset="100%" stop-color="#3b0764"/>
+    </linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="960" rx="32" fill="url(#bg)"/>
+  <rect width="800" height="960" rx="32" fill="url(#grid)"/>
+  <circle cx="660" cy="150" r="180" fill="#f59e0b" opacity="0.14"/>
+  <circle cx="140" cy="800" r="220" fill="#ef4444" opacity="0.12"/>
+  
+    <g transform="translate(400,315)">
+      <rect x="-305" y="-135" width="285" height="270" rx="22" fill="rgba(245,158,11,0.18)" stroke="#fbbf24" stroke-width="3"/>
+      <text x="-162" y="-45" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="800" fill="#fef3c7">LÀM NHỤC</text>
+      <text x="-162" y="-10" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="800" fill="#fef3c7">VU KHỐNG</text>
+      <text x="-162" y="45" text-anchor="middle" font-family="monospace" font-size="21" fill="#fde68a">Đ.140 · 155 · 156</text>
+      <text x="-162" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" fill="#fffbeb">Xúc phạm uy tín, nhân phẩm</text>
+
+      <rect x="20" y="-135" width="285" height="270" rx="22" fill="rgba(239,68,68,0.18)" stroke="#f87171" stroke-width="3"/>
+      <text x="162" y="-45" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="800" fill="#fee2e2">TRUYỀN HIV</text>
+      <text x="162" y="-10" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="800" fill="#fee2e2">&amp; TỘI KHÁC</text>
+      <text x="162" y="45" text-anchor="middle" font-family="monospace" font-size="21" fill="#fecaca">Đ.148 · Đ.149</text>
+      <text x="162" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" fill="#fef2f2">Kỳ thị &amp; Bệnh cơ hội</text>
+    </g>
+    <rect x="95" y="505" width="610" height="240" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <text x="400" y="565" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="800" fill="#ffffff">HỆ LỤY KÉP VỚI NẠN NHÂN</text>
+    <text x="400" y="622" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#fca5a5">Sức khỏe: Suy giảm miễn dịch, tử vong bệnh cơ hội</text>
+    <text x="400" y="668" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#fcd34d">Tâm lý: Mặc cảm, lo sợ kỳ thị, khó tự minh oan</text>
+  
+  <rect x="44" y="40" width="320" height="46" rx="23" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.22)"/>
+  <text x="204" y="69" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#ffffff" letter-spacing="1.4">NHÓM 3 &amp; NHÓM 4</text>
+  <rect x="44" y="838" width="712" height="80" rx="18" fill="rgba(10,16,32,0.58)" stroke="rgba(255,255,255,0.18)"/>
+  <text x="400" y="886" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="22" font-weight="700" fill="#ffffff">TỔN THƯƠNG KÉP: THỂ CHẤT &amp; TINH THẦN</text>
+</svg>

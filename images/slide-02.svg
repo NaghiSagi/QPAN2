@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="960" rx="32" fill="url(#bg)"/>
+  <rect width="800" height="960" rx="32" fill="url(#grid)"/>
+  <circle cx="660" cy="150" r="180" fill="#38bdf8" opacity="0.14"/>
+  <circle cx="140" cy="800" r="220" fill="#818cf8" opacity="0.12"/>
+  
+    <line x1="140" y1="210" x2="140" y2="700" stroke="rgba(255,255,255,0.22)" stroke-width="4" stroke-dasharray="10 10"/>
+    
+      <circle cx="140" cy="210" r="34" fill="#38bdf8"/>
+      <text x="140" y="219" text-anchor="middle" font-family="monospace" font-size="24" font-weight="800" fill="#0f172a">01</text>
+      <rect x="200" y="166" width="540" height="88" rx="18" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.18)"/>
+      <text x="232" y="218" font-family="Inter,Segoe UI,sans-serif" font-size="24" font-weight="700" fill="#ffffff">Khái niệm &amp; Quyền hiến định</text>
+    
+      <circle cx="140" cy="370" r="34" fill="#60a5fa"/>
+      <text x="140" y="379" text-anchor="middle" font-family="monospace" font-size="24" font-weight="800" fill="#0f172a">02</text>
+      <rect x="200" y="326" width="540" height="88" rx="18" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.18)"/>
+      <text x="232" y="378" font-family="Inter,Segoe UI,sans-serif" font-size="24" font-weight="700" fill="#ffffff">5 Dấu hiệu pháp lý cấu thành</text>
+    
+      <circle cx="140" cy="530" r="34" fill="#818cf8"/>
+      <text x="140" y="539" text-anchor="middle" font-family="monospace" font-size="24" font-weight="800" fill="#0f172a">03</text>
+      <rect x="200" y="486" width="540" height="88" rx="18" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.18)"/>
+      <text x="232" y="538" font-family="Inter,Segoe UI,sans-serif" font-size="24" font-weight="700" fill="#ffffff">4 Nhóm tội phạm BLHS 2015</text>
+    
+      <circle cx="140" cy="690" r="34" fill="#34d399"/>
+      <text x="140" y="699" text-anchor="middle" font-family="monospace" font-size="24" font-weight="800" fill="#0f172a">04</text>
+      <rect x="200" y="646" width="540" height="88" rx="18" fill="rgba(255,255,255,0.09)" stroke="rgba(255,255,255,0.18)"/>
+      <text x="232" y="698" font-family="Inter,Segoe UI,sans-serif" font-size="24" font-weight="700" fill="#ffffff">Nguyên nhân &amp; Phòng ngừa</text>
+    
+  
+  <rect x="44" y="40" width="320" height="46" rx="23" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.22)"/>
+  <text x="204" y="69" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#ffffff" letter-spacing="1.4">MỤC TIÊU BÀI HỌC</text>
+  <rect x="44" y="838" width="712" height="80" rx="18" fill="rgba(10,16,32,0.58)" stroke="rgba(255,255,255,0.18)"/>
+  <text x="400" y="886" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="22" font-weight="700" fill="#ffffff">LỘ TRÌNH 4 PHẦN TRỌNG TÂM</text>
+</svg>

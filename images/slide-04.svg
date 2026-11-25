@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a2540"/>
+      <stop offset="100%" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="960" rx="32" fill="url(#bg)"/>
+  <rect width="800" height="960" rx="32" fill="url(#grid)"/>
+  <circle cx="660" cy="150" r="180" fill="#fbbf24" opacity="0.14"/>
+  <circle cx="140" cy="800" r="220" fill="#38bdf8" opacity="0.12"/>
+  
+    <polygon points="400,155 570,340 230,340" fill="rgba(251,191,36,0.28)" stroke="#fbbf24" stroke-width="4"/>
+    <text x="400" y="280" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="800" fill="#fef3c7">HIẾN PHÁP 2013</text>
+    <text x="400" y="312" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" fill="#fde68a">Điều 19, 20, 21</text>
+
+    <polygon points="215,365 585,365 655,540 145,540" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" stroke-width="4"/>
+    <text x="400" y="445" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="800" fill="#e0f2fe">BỘ LUẬT DÂN SỰ 2015</text>
+    <text x="400" y="482" text-anchor="middle" font-family="Inter,sans-serif" font-size="19" fill="#bae6fd">Điều 34 · Quyền nhân thân</text>
+
+    <polygon points="130,565 670,565 735,745 65,745" fill="rgba(129,140,248,0.28)" stroke="#818cf8" stroke-width="4"/>
+    <text x="400" y="645" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="800" fill="#eef2ff">BỘ LUẬT HÌNH SỰ 2015 (SĐ 2017)</text>
+    <text x="400" y="685" text-anchor="middle" font-family="Inter,sans-serif" font-size="19" fill="#c7d2fe">Chế tài trừng trị hành vi nguy hiểm</text>
+  
+  <rect x="44" y="40" width="320" height="46" rx="23" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.22)"/>
+  <text x="204" y="69" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#ffffff" letter-spacing="1.4">CƠ SỞ PHÁP LÝ</text>
+  <rect x="44" y="838" width="712" height="80" rx="18" fill="rgba(10,16,32,0.58)" stroke="rgba(255,255,255,0.18)"/>
+  <text x="400" y="886" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="22" font-weight="700" fill="#ffffff">HỆ THỐNG PHÁP LUẬT BẢO HỘ 3 TẦNG</text>
+</svg>

@@ -1,0 +1,3044 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="corporate-clean" data-themes="corporate-clean,minimal-white,tokyo-night,academic-paper" data-theme-base="assets/themes/">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bài 5: Phòng, chống tội phạm xâm hại danh dự, nhân phẩm</title>
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" id="theme-link" href="assets/themes/corporate-clean.css">
+  <link rel="stylesheet" href="assets/animations/animations.css">
+  <style>
+    /* ============== FULL-SCREEN BACKGROUND & CHROME ============== */
+    body {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    /* Soft drifting pastel rainbow ambient background across the ENTIRE viewport (100vw x 100vh) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -12%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 46% 42% at 14% 18%, rgba(147, 197, 253, 0.30), transparent 70%),
+        radial-gradient(ellipse 44% 40% at 86% 20%, rgba(196, 181, 253, 0.26), transparent 70%),
+        radial-gradient(ellipse 42% 44% at 78% 82%, rgba(249, 168, 212, 0.24), transparent 70%),
+        radial-gradient(ellipse 44% 40% at 20% 82%, rgba(110, 231, 183, 0.24), transparent 70%),
+        radial-gradient(ellipse 38% 36% at 50% 50%, rgba(253, 230, 138, 0.19), transparent 72%);
+      animation: pastel-drift 18s ease-in-out infinite alternate;
+    }
+    html[data-theme="tokyo-night"] body::before {
+      opacity: 0.42;
+    }
+    @keyframes pastel-drift {
+      0%   { transform: translate3d(0, 0, 0) scale(1); }
+      50%  { transform: translate3d(1.8%, -1.4%, 0) scale(1.03); }
+      100% { transform: translate3d(-1.6%, 1.6%, 0) scale(1.01); }
+    }
+    .global-fx-layer {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.28;
+    }
+    .deck {
+      z-index: 1;
+      background: transparent !important;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --radius-lg: 16px;
+      --pastel-rainbow: linear-gradient(120deg,
+        rgba(96, 165, 250, 0.22),
+        rgba(167, 139, 250, 0.20),
+        rgba(244, 114, 182, 0.18),
+        rgba(251, 191, 36, 0.16),
+        rgba(52, 211, 153, 0.20));
+      --pastel-rainbow-line: linear-gradient(90deg, #93c5fd, #c4b5fd, #f9a8d4, #fde68a, #6ee7b7);
+    }
+    .slide {
+      padding: 86px 72px 76px;
+      justify-content: flex-start;
+      background: transparent;
+    }
+    /* Hide per-slide constellation when full-viewport #global-fx-layer is active; keep orbit-ring & preview mode */
+    .slide .fx-layer[data-fx="constellation"] {
+      display: none;
+    }
+    html[data-preview="1"] .slide .fx-layer[data-fx="constellation"] {
+      display: block;
+    }
+    html[data-preview="1"] .global-fx-layer {
+      display: none !important;
+    }
+
+    /* Top corners: uniform, clear, understated */
+    .deck-header {
+      top: 18px;
+      left: 72px;
+      right: 72px;
+      height: 44px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-sans);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      opacity: 0.88;
+      pointer-events: auto;
+    }
+    .hdr-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hdr-star {
+      width: 20px;
+      height: 20px;
+      color: var(--accent-2);
+      flex-shrink: 0;
+    }
+    .hdr-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      min-width: 32px;
+      max-width: 110px;
+      border-radius: 6px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    }
+    .logo-slot:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 0 2px var(--accent-2);
+    }
+    .logo-slot.drag-over {
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .hcmute-logo {
+      height: 32px;
+      width: auto;
+      max-width: 108px;
+      object-fit: contain;
+      display: block;
+    }
+    .logo-input {
+      display: none;
+    }
+
+    /* Bottom corners: uniform Tiểu đội 7 & Page Number */
+    .deck-footer {
+      bottom: 16px;
+      left: 72px;
+      right: 72px;
+      height: 38px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-sans);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text-2);
+      opacity: 0.88;
+    }
+    .slide-number {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-2);
+    }
+
+    .fx-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.28;
+    }
+    .slide-body {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Kicker badge */
+    .kicker-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 7px 16px;
+      margin: 0 0 12px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+      color: var(--accent-2);
+      font-family: var(--font-sans);
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    .kicker-badge svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .eyebrow {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+    .h1 {
+      font-size: 76px;
+      line-height: 1.08;
+      margin: 0 0 18px;
+    }
+    .h2 {
+      font-size: 52px;
+      line-height: 1.12;
+      margin: 0 0 18px;
+    }
+    .h3 {
+      font-size: 32px;
+      line-height: 1.2;
+      margin: 0 0 8px;
+    }
+    .h4 {
+      font-size: 25px;
+      line-height: 1.25;
+      margin: 0 0 8px;
+    }
+    .lede {
+      font-size: 25px;
+      line-height: 1.48;
+      max-width: none;
+      margin: 0;
+    }
+    .dim {
+      font-size: 20px;
+      line-height: 1.5;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      padding: 8px 18px;
+      font-weight: 600;
+    }
+    .pill svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ============== INTERACTIVE ZOOMABLE CARDS ============== */
+    .interactive-card {
+      cursor: pointer;
+      transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), border-color 0.22s var(--ease);
+      position: relative;
+    }
+    .interactive-card:hover,
+    .interactive-card.is-zoom-source {
+      transform: translateY(-4px) scale(1.015);
+      border-color: var(--accent-2);
+      box-shadow: var(--shadow-lg);
+    }
+    .interactive-card::after {
+      content: "⤢ Chi tiết";
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent-2) 12%, transparent);
+      color: var(--accent-2);
+      opacity: 0;
+      transition: opacity 0.2s var(--ease);
+      pointer-events: none;
+    }
+    .interactive-card:hover::after {
+      opacity: 1;
+    }
+    .card-full {
+      display: none !important;
+    }
+
+    /* Floating Hover Popover anchored at hovered card — auto-closes on mouseleave */
+    .hover-popover {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 740px;
+      max-width: calc(100% - 72px);
+      max-height: 820px;
+      z-index: 60;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.92)),
+        var(--pastel-rainbow);
+      background-color: var(--surface);
+      color: var(--text-1);
+      border: 1.5px solid color-mix(in srgb, var(--accent-2) 45%, var(--border));
+      border-radius: 16px;
+      box-shadow: 0 26px 70px rgba(8, 15, 36, 0.24), 0 8px 22px rgba(8, 15, 36, 0.10);
+      padding: 26px 28px 24px;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translate3d(var(--pop-x, 0px), var(--pop-y, 0px), 0) scale(0.84);
+      transform-origin: var(--pop-origin-x, 50%) var(--pop-origin-y, 50%);
+      transition:
+        opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0s linear 0.22s;
+      will-change: transform, opacity;
+    }
+    .hover-popover::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--pastel-rainbow-line);
+    }
+    html[data-theme="tokyo-night"] .hover-popover {
+      background: var(--surface);
+    }
+    .hover-popover.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translate3d(var(--pop-x, 0px), var(--pop-y, 0px), 0) scale(1);
+      transition:
+        opacity 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0s linear 0s;
+    }
+    .pop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .pop-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .pop-title-wrap h3 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.24;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .pop-badge {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent-2) 12%, transparent);
+      color: var(--accent-2);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .pop-body {
+      margin-top: 14px;
+      font-size: 19px;
+      line-height: 1.54;
+      color: var(--text-1);
+    }
+    .pop-body p {
+      margin: 0 0 10px;
+    }
+    .pop-body p:last-child {
+      margin-bottom: 0;
+    }
+    .pop-body ul {
+      margin: 6px 0 10px;
+      padding-left: 22px;
+    }
+    .pop-body li {
+      margin-bottom: 6px;
+    }
+    .pop-body blockquote {
+      margin: 10px 0;
+      padding: 12px 18px;
+      border-left: 4px solid var(--accent);
+      background: var(--grad-soft);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    /* ============== DEFENSE / SECURITY CARD ICONS ============== */
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .card-head h4,
+    .card-head h3 {
+      margin: 0;
+    }
+    .card-ico {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+    }
+    .card-ico svg {
+      width: 22px;
+      height: 22px;
+    }
+    .card-ico.alt {
+      background: color-mix(in srgb, var(--accent-2) 12%, transparent);
+      color: var(--accent-2);
+      border-color: color-mix(in srgb, var(--accent-2) 24%, transparent);
+    }
+    .card-ico.warn {
+      background: color-mix(in srgb, var(--warn) 14%, transparent);
+      color: var(--warn);
+      border-color: color-mix(in srgb, var(--warn) 30%, transparent);
+    }
+    .card-ico.bad {
+      background: color-mix(in srgb, var(--bad) 14%, transparent);
+      color: var(--bad);
+      border-color: color-mix(in srgb, var(--bad) 30%, transparent);
+    }
+    .card-ico.good {
+      background: color-mix(in srgb, var(--good) 14%, transparent);
+      color: var(--good);
+      border-color: color-mix(in srgb, var(--good) 30%, transparent);
+    }
+
+    /* ============== 2-ZONE CONTENT + MEDIA LAYOUT ============== */
+    .stage-split {
+      display: grid;
+      grid-template-columns: 1.45fr 0.78fr;
+      gap: 36px;
+      align-items: stretch;
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+    }
+    .stage-split.media-left {
+      grid-template-columns: 0.78fr 1.45fr;
+    }
+    .stage-split.media-left .media-col {
+      order: -1;
+    }
+    .content-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+    }
+    .media-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+    }
+    .media-slot {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      min-height: 340px;
+      max-height: 660px;
+      aspect-ratio: auto !important;
+      margin: 0;
+      border-radius: 16px;
+      border: 1.5px solid var(--border-strong);
+      background: var(--surface-2);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .media-slot.wide {
+      flex: 0 1 auto;
+      aspect-ratio: 16 / 10 !important;
+      max-height: 520px;
+    }
+    .media-slot .img-tag {
+      left: auto;
+      right: 16px;
+      top: 16px;
+      transition: opacity 0.2s var(--ease);
+    }
+    .media-slot:hover .img-tag {
+      opacity: 0;
+    }
+    .media-slot > img,
+    .media-slot > video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .media-slot.contain {
+      background: #ffffff;
+      padding: 20px;
+    }
+    .media-slot.contain > img {
+      object-fit: contain;
+    }
+    .media-slot.is-custom > img,
+    .media-slot.is-custom > video {
+      object-fit: cover;
+    }
+    .media-slot.drag-over {
+      outline: 4px dashed var(--accent);
+      outline-offset: -8px;
+    }
+    .media-upload-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 5;
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(15,23,42,0.78);
+      color: #ffffff;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+      backdrop-filter: blur(8px);
+    }
+    .media-slot:hover .media-upload-btn,
+    .media-upload-btn:focus-visible {
+      opacity: 1;
+    }
+    .media-upload-btn:hover {
+      transform: scale(1.04);
+    }
+    .media-cap {
+      margin: 12px 2px 0;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 16px;
+      line-height: 1.45;
+      color: var(--text-2);
+      text-align: left;
+    }
+    .media-cap strong {
+      display: block;
+      color: var(--text-1);
+      font-size: 17px;
+      margin-bottom: 2px;
+    }
+    .media-cap span {
+      display: block;
+      font-size: 14px;
+      color: var(--text-3);
+    }
+
+    /* ============== INTERACTIVE FANNED PHOTO DECK (MULTI-PHOTO SLIDES) ============== */
+    .media-fan {
+      position: relative;
+      width: 100%;
+      height: 455px;
+      margin: 4px 0 10px;
+      perspective: 1200px;
+      flex-shrink: 0;
+    }
+    .fan-card {
+      position: absolute;
+      inset: 10px 54px;
+      margin: 0;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 14px 36px rgba(8, 15, 36, 0.22), 0 4px 12px rgba(8, 15, 36, 0.10);
+      overflow: hidden;
+      cursor: pointer;
+      transition:
+        transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.28s var(--ease),
+        border-color 0.25s var(--ease),
+        opacity 0.25s var(--ease);
+      will-change: transform;
+    }
+    .fan-card > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .fan-card.contain {
+      background: #ffffff;
+      padding: 18px;
+    }
+    .fan-card.contain > img {
+      object-fit: contain;
+    }
+    .fan-num {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.78);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .fan-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.76);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transition: opacity 0.2s var(--ease);
+    }
+    .media-fan:hover .fan-badge,
+    .media-fan.is-fanned .fan-badge {
+      opacity: 1;
+    }
+
+    /* Resting fanned positions */
+    .fan-card.pos-active {
+      z-index: 10;
+      transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+      border-color: var(--accent-2);
+      box-shadow: 0 22px 54px rgba(8, 15, 36, 0.26);
+    }
+    .fan-card.pos-left {
+      z-index: 6;
+      transform: translate3d(-40px, 14px, 0) rotate(-7deg) scale(0.92);
+      opacity: 0.94;
+    }
+    .fan-card.pos-right {
+      z-index: 5;
+      transform: translate3d(40px, 16px, 0) rotate(7deg) scale(0.92);
+      opacity: 0.94;
+    }
+    .fan-card.pos-back {
+      z-index: 3;
+      transform: translate3d(0, 22px, 0) rotate(2deg) scale(0.88);
+      opacity: 0.85;
+    }
+
+    /* Wide spread when hovering over .media-fan (or toggled .is-fanned) */
+    .media-fan:hover .fan-card.pos-active,
+    .media-fan.is-fanned .fan-card.pos-active {
+      transform: translate3d(0, -14px, 0) rotate(0deg) scale(0.96);
+    }
+    .media-fan:hover .fan-card.pos-left,
+    .media-fan.is-fanned .fan-card.pos-left {
+      transform: translate3d(-94px, 18px, 0) rotate(-11deg) scale(0.87);
+      opacity: 1;
+    }
+    .media-fan:hover .fan-card.pos-right,
+    .media-fan.is-fanned .fan-card.pos-right {
+      transform: translate3d(94px, 18px, 0) rotate(11deg) scale(0.87);
+      opacity: 1;
+    }
+    .media-fan:hover .fan-card.pos-back,
+    .media-fan.is-fanned .fan-card.pos-back {
+      transform: translate3d(0, 38px, 0) rotate(0deg) scale(0.84);
+      opacity: 0.96;
+    }
+    .media-fan .fan-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 24px 56px rgba(29, 78, 216, 0.28);
+    }
+    .media-fan:hover .fan-card.pos-left:hover,
+    .media-fan.is-fanned .fan-card.pos-left:hover {
+      z-index: 12;
+      transform: translate3d(-102px, 4px, 0) rotate(-6deg) scale(0.93);
+    }
+    .media-fan:hover .fan-card.pos-right:hover,
+    .media-fan.is-fanned .fan-card.pos-right:hover {
+      z-index: 12;
+      transform: translate3d(102px, 4px, 0) rotate(6deg) scale(0.93);
+    }
+
+    /* Thumbnail & Fan Controls strip */
+    .fan-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .fan-thumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .fan-thumb {
+      width: 58px;
+      height: 42px;
+      padding: 0;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.72;
+      transition: transform 0.18s var(--ease), border-color 0.18s var(--ease), opacity 0.18s var(--ease);
+    }
+    .fan-thumb:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+    .fan-thumb.active {
+      opacity: 1;
+      border-color: var(--accent-2);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-2) 25%, transparent);
+    }
+    .fan-thumb > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .fan-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .fan-btn {
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text-1);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s var(--ease), color 0.18s var(--ease);
+    }
+    .fan-btn:hover {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+    }
+    .fan-add-input {
+      display: none;
+    }
+    .media-input {
+      display: none;
+    }
+
+    /* ============== BADGES & CARDS ============== */
+    .badge-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .card {
+      padding: 24px 28px;
+      border-radius: 14px;
+      background: linear-gradient(150deg, var(--surface) 60%, rgba(238, 244, 255, 0.65));
+    }
+    html[data-theme="tokyo-night"] .card {
+      background: var(--surface);
+    }
+
+    /* Slide 1: Cover stats strip */
+    .cover-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 28px;
+    }
+    .cover-stat {
+      padding: 20px 22px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, var(--surface) 58%, rgba(239, 246, 255, 0.72));
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--accent);
+      box-shadow: var(--shadow);
+    }
+    .cover-stat:nth-child(2) {
+      border-top-color: #a78bfa;
+      background: linear-gradient(145deg, var(--surface) 58%, rgba(245, 243, 255, 0.78));
+    }
+    .cover-stat:nth-child(3) {
+      border-top-color: #f472b6;
+      background: linear-gradient(145deg, var(--surface) 58%, rgba(253, 242, 248, 0.78));
+    }
+    html[data-theme="tokyo-night"] .cover-stat,
+    html[data-theme="tokyo-night"] .cover-stat:nth-child(2),
+    html[data-theme="tokyo-night"] .cover-stat:nth-child(3) {
+      background: var(--surface);
+    }
+    .cover-stat-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .cover-stat b {
+      display: block;
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+    .cover-stat span {
+      font-size: 18px;
+      color: var(--text-2);
+      line-height: 1.42;
+      display: block;
+    }
+
+    /* Slide 2: Objectives + TOC */
+    .obj-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 10px;
+    }
+    .obj-card {
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      background: linear-gradient(145deg, var(--surface) 58%, rgba(238, 244, 255, 0.72));
+      border-radius: 14px;
+    }
+    .obj-card:nth-child(2) {
+      border-left-color: #a78bfa;
+      background: linear-gradient(145deg, var(--surface) 58%, rgba(245, 243, 255, 0.72));
+    }
+    html[data-theme="tokyo-night"] .obj-card,
+    html[data-theme="tokyo-night"] .obj-card:nth-child(2) {
+      background: var(--surface-2);
+    }
+    .obj-card h4 {
+      margin: 0;
+      font-size: 23px;
+      color: var(--accent);
+    }
+    .obj-card p {
+      margin: 0;
+      font-size: 19px;
+      color: var(--text-2);
+      line-height: 1.45;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .toc-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 20px 24px;
+    }
+    .toc-item h4 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      color: var(--text-1);
+    }
+    .toc-item p {
+      margin: 0;
+      font-size: 18px;
+      color: var(--text-2);
+      line-height: 1.45;
+    }
+    .toc-tag {
+      display: inline-block;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-2);
+    }
+
+    /* Slide 3: Comparison */
+    .vs-grid {
+      display: grid;
+      grid-template-columns: 1fr 56px 1fr;
+      gap: 14px;
+      align-items: stretch;
+      margin-top: 10px;
+    }
+    .vs-mid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--text-3);
+    }
+    .vs-card {
+      padding: 22px 26px;
+      border-top: 5px solid var(--accent);
+    }
+    .vs-card.alt {
+      border-top-color: var(--accent-2);
+    }
+    .vs-card ul {
+      margin: 10px 0 0;
+      padding-left: 22px;
+      font-size: 20px;
+      line-height: 1.48;
+      color: var(--text-2);
+    }
+    .vs-card li + li {
+      margin-top: 8px;
+    }
+    .banner-grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+    .banner-card {
+      padding: 20px 24px;
+      background: linear-gradient(145deg, var(--surface) 56%, rgba(254, 242, 242, 0.75));
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--bad);
+      border-radius: 14px;
+    }
+    .banner-card.alt {
+      border-left-color: var(--accent);
+      background: linear-gradient(145deg, var(--surface) 56%, rgba(239, 246, 255, 0.75));
+    }
+    html[data-theme="tokyo-night"] .banner-card,
+    html[data-theme="tokyo-night"] .banner-card.alt {
+      background: var(--surface-2);
+    }
+    .banner-card b {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 21px;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+    .banner-card p {
+      margin: 0;
+      font-size: 18px;
+      color: var(--text-2);
+      line-height: 1.46;
+    }
+
+    /* Slide 4: Legal cards & quote */
+    .law-stat {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.12;
+      margin: 4px 0 8px;
+      letter-spacing: -0.02em;
+    }
+    .quote-box {
+      margin-top: 18px;
+      padding: 22px 28px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(239, 246, 255, 0.8), rgba(245, 243, 255, 0.75), rgba(253, 242, 248, 0.75));
+      border: 1px solid var(--border);
+      border-left: 6px solid var(--accent);
+    }
+    html[data-theme="tokyo-night"] .quote-box {
+      background: var(--grad-soft);
+    }
+    .quote-box blockquote {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 21px;
+      line-height: 1.54;
+      color: var(--text-1);
+    }
+    .quote-box cite {
+      display: block;
+      margin-top: 10px;
+      font-style: normal;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-2);
+    }
+
+    /* Slide 5: 5 Legal Elements */
+    .signs-top {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 12px;
+    }
+    .signs-bottom {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .sign-card {
+      padding: 22px 24px;
+      border-top: 4px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+    }
+    .sign-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .sign-head h4 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .sign-card p {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.48;
+      color: var(--text-2);
+      flex: 1;
+    }
+    .sign-tag {
+      display: inline-block;
+      margin-top: 12px;
+      align-self: flex-start;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--surface-2);
+      color: var(--accent-2);
+      border: 1px solid var(--border);
+    }
+
+    /* Slide 6: KPI + Chart */
+    .kpi-num {
+      font-size: 54px;
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--accent);
+      margin: 4px 0 6px;
+    }
+    .chart-card {
+      margin-top: 16px;
+      padding: 22px 28px;
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 280px 1fr 220px;
+      align-items: center;
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .bar-label {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+    .bar-track {
+      height: 18px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--grad);
+    }
+    .bar-val {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-2);
+      text-align: right;
+    }
+    .highlight-strip {
+      margin-top: 16px;
+      padding: 16px 22px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(238, 242, 255, 0.8), rgba(236, 253, 245, 0.78));
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent-2);
+      font-size: 19px;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    html[data-theme="tokyo-night"] .highlight-strip {
+      background: var(--surface-2);
+    }
+
+    /* Slide 7 & 8: Crime detail lists */
+    .law-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0;
+    }
+    .law-list li {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 12px;
+      align-items: baseline;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 18px;
+      line-height: 1.42;
+      color: var(--text-2);
+    }
+    .law-list li:last-child {
+      border-bottom: none;
+    }
+    .art-pill {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      color: var(--accent);
+      text-align: center;
+    }
+    .impact-box {
+      margin-top: 16px;
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(254, 242, 242, 0.8), rgba(255, 251, 235, 0.75));
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--bad);
+    }
+    html[data-theme="tokyo-night"] .impact-box {
+      background: var(--surface-2);
+    }
+    .impact-box b {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      color: var(--text-1);
+      margin-bottom: 8px;
+    }
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      font-size: 18px;
+      line-height: 1.48;
+      color: var(--text-2);
+    }
+
+    /* Slide 9: 3 Causes */
+    .pillar-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .pillar-row {
+      padding: 18px 24px;
+      border-left: 6px solid var(--accent);
+    }
+    .pillar-row.c2 { border-left-color: var(--warn); }
+    .pillar-row.c3 { border-left-color: var(--bad); }
+    .pillar-row ul {
+      margin: 0;
+      padding-left: 22px;
+      font-size: 19px;
+      line-height: 1.48;
+      color: var(--text-2);
+    }
+    .pillar-row li + li {
+      margin-top: 4px;
+    }
+
+    /* Slide 10: Closer */
+    .action-stack {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 22px;
+    }
+    .action-card {
+      padding: 22px 24px;
+      border-top: 4px solid var(--accent);
+    }
+    .action-card h4 {
+      font-size: 23px;
+      color: var(--accent);
+    }
+    .action-card p {
+      margin: 0;
+      font-size: 18px;
+      color: var(--text-2);
+      line-height: 1.48;
+    }
+
+    @media print {
+      body::before,
+      .global-fx-layer,
+      .media-upload-btn,
+      .fan-controls,
+      .fan-badge,
+      .hover-popover,
+      .interactive-card::after {
+        display: none !important;
+      }
+      .deck {
+        background: var(--bg) !important;
+      }
+    }
+    html[data-preview="1"] .media-upload-btn,
+    html[data-preview="1"] .fan-controls,
+    html[data-preview="1"] .fan-badge,
+    html[data-preview="1"] .hover-popover,
+    html[data-preview="1"] .interactive-card::after {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+<div class="global-fx-layer" id="global-fx-layer"></div>
+<div class="deck">
+
+  <!-- ============ SLIDE 1: COVER ============ -->
+  <section class="slide is-active" data-title="Trang bìa · Bài 5">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split">
+        <div class="content-col" data-anim="stagger-list">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Bài 5 · Pháp luật &amp; Phòng chống tội phạm</span>
+          </div>
+          <h1 class="h1" data-anim="rise-in">
+            Phòng, chống tội phạm<br>
+            <span class="gradient-text">xâm hại danh dự, <span style="white-space:nowrap">nhân phẩm</span></span>
+          </h1>
+          <p class="lede">
+            Trang bị kiến thức pháp lý nền tảng về quyền bất khả xâm phạm của con người, nhận diện 5 dấu hiệu cấu thành, 4 nhóm tội danh theo Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017) và nguyên nhân phát sinh.
+          </p>
+          <div class="cover-stats">
+            <div class="cover-stat interactive-card" data-zoom-title="3 Văn bản pháp lý bảo hộ danh dự, nhân phẩm" data-zoom-badge="Nền tảng pháp luật">
+              <div class="cover-stat-head">
+                <span class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <b>3 Văn bản</b>
+              </div>
+              <span>Hiến pháp 2013 · BLDS 2015 · BLHS 2015 (SĐ 2017)</span>
+              <div class="card-full">
+                <p>Danh dự, nhân phẩm con người là một trong những quyền cơ bản của công dân, bất khả xâm phạm và luôn được pháp luật Việt Nam bảo vệ nghiêm ngặt qua 3 văn bản quy phạm pháp luật nền tảng:</p>
+                <ul>
+                  <li><strong>Hiến pháp năm 2013 (Điều 19, Điều 20, Điều 21):</strong> Quy định mọi người có quyền bất khả xâm phạm về thân thể, được pháp luật bảo hộ về sức khỏe, danh dự và nhân phẩm; không bị tra tấn, bạo lực, truy bức, nhục hình hay bất kỳ hình thức đối xử nào khác.</li>
+                  <li><strong>Bộ luật Dân sự năm 2015 (Điều 34):</strong> Tiếp tục khẳng định “Danh dự, nhân phẩm, uy tín của cá nhân là bất khả xâm phạm và được pháp luật bảo vệ”.</li>
+                  <li><strong>Bộ luật Hình sự năm 2015 số 100/2015/QH13 (sửa đổi, bổ sung năm 2017):</strong> Quy định cụ thể các tội danh và chế tài hình sự xử lý nghiêm minh hành vi nguy hiểm cho xã hội xâm phạm danh dự, nhân phẩm.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="cover-stat interactive-card" data-zoom-title="4 Nhóm tội phạm xâm hại danh dự, nhân phẩm" data-zoom-badge="Mục 1.3 · BLHS 2015">
+              <div class="cover-stat-head">
+                <span class="card-ico alt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v18M5 8h14M5 8l-2 6h4l-2-6zM19 8l-2 6h4l-2-6z"/></svg></span>
+                <b>4 Nhóm tội</b>
+              </div>
+              <span>Tình dục · Mua bán người · Làm nhục · Khác</span>
+              <div class="card-full">
+                <p>Căn cứ vào các văn bản quy phạm pháp luật, đặc biệt là Bộ luật Hình sự 2015 số 100/2015/QH13 (sửa đổi, bổ sung năm 2017) của Quốc hội, các tội phạm xâm phạm danh dự, nhân phẩm được phân loại thành 4 nhóm:</p>
+                <ul>
+                  <li><strong>a. Các tội xâm phạm tình dục (Điều 141 – Điều 147):</strong> Hiếp dâm, hiếp dâm người dưới 16 tuổi, cưỡng dâm, cưỡng dâm người từ đủ 13 đến dưới 16 tuổi, giao cấu/QHTD với người từ đủ 13 đến dưới 16 tuổi, dâm ô đối với người dưới 16 tuổi, sử dụng người dưới 16 tuổi vào mục đích khiêu dâm.</li>
+                  <li><strong>b. Các tội mua bán người (Điều 150 – Điều 154):</strong> Mua bán người, mua bán người dưới 16 tuổi, đánh tráo người dưới 01 tuổi, chiếm đoạt người dưới 16 tuổi, mua bán/chiếm đoạt mô hoặc bộ phận cơ thể người.</li>
+                  <li><strong>c. Các tội làm nhục người khác (Điều 140, 155, 156):</strong> Tội hành hạ người khác, tội làm nhục người khác và tội vu khống.</li>
+                  <li><strong>d. Nhóm tội khác (Điều 148, 149 &amp; tội khác):</strong> Lây truyền HIV, cố ý truyền HIV cho người khác và tội chống người thi hành công vụ.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="cover-stat interactive-card" data-zoom-title="Chủ thể &amp; Độ tuổi chịu trách nhiệm hình sự" data-zoom-badge="Điều 12 BLHS 2015">
+              <div class="cover-stat-head">
+                <span class="card-ico bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+                <b>16+ Tuổi</b>
+              </div>
+              <span>Độ tuổi chủ thể chịu trách nhiệm hình sự (Đ.12)</span>
+              <div class="card-full">
+                <p><strong>Tội xâm phạm nhân phẩm, danh dự của con người</strong> là những hành vi nguy hiểm cho xã hội được quy định trong Bộ luật Hình sự, do người có năng lực trách nhiệm hình sự và đủ tuổi chịu trách nhiệm hình sự thực hiện một cách cố ý hoặc vô ý xâm phạm tới quyền được tôn trọng và bảo vệ về nhân phẩm và danh dự được Hiến pháp và pháp luật hình sự ghi nhận và bảo vệ.</p>
+                <p>Căn cứ theo quy định tại <strong>Điều 12 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)</strong>, chủ thể của các tội phạm xâm phạm danh dự, nhân phẩm của người khác được xác định là những người <strong>đầy đủ năng lực hành vi dân sự, năng lực trách nhiệm hình sự và từ đủ 16 tuổi trở lên</strong>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="row wrap mt-m">
+            <span class="pill pill-accent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Quốc phòng – An ninh
+            </span>
+            <span class="pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+              Hiến pháp 2013
+            </span>
+            <span class="pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+              BLDS 2015 · Điều 34
+            </span>
+            <span class="pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              BLHS 2015 · Đ.140–156
+            </span>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-right">
+          <figure class="img-frame media-slot" data-slot="1">
+            <img src="images/photo-01.jpg" alt="Tòa nhà Quốc hội nước CHXHCN Việt Nam">
+            <span class="img-tag">Quốc hội Việt Nam</span>
+            <button type="button" class="media-upload-btn" title="Chọn ảnh hoặc video từ máy">+ Đổi ảnh / Video</button>
+            <input type="file" class="media-input" accept="image/*,video/*">
+          </figure>
+          <div class="media-cap">
+            <strong>Tòa nhà Quốc hội Việt Nam (Ba Đình, Hà Nội)</strong>
+            <span>Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Grayswoodsurrey)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="1" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Xin chào mọi người. Hôm nay chúng ta cùng tìm hiểu <strong>Bài 5: Phòng, chống một số loại tội phạm xâm hại danh dự, nhân phẩm của người khác</strong> trong học phần Giáo dục Quốc phòng – An ninh.</p>
+      <p>Thực tế cuộc sống cho thấy, xâm hại một con người không chỉ là gây thương tích về thể xác. Những hành vi chà đạp <em>danh dự, nhân phẩm</em> để lại vết thương tinh thần kéo dài, ảnh hưởng trực tiếp tới trật tự, an toàn xã hội.</p>
+      <p>Trong bài trình bày gồm 10 trang này, Tiểu đội 7 sẽ cùng cả lớp đi qua <strong>bốn nội dung trọng tâm</strong>: khái niệm và 3 văn bản pháp lý bảo hộ, 5 dấu hiệu cấu thành tội phạm, 4 nhóm tội danh trong Bộ luật Hình sự 2015, và 3 nhóm nguyên nhân gốc rễ.</p>
+      <p>Mục tiêu lớn nhất là giúp mỗi sinh viên <strong>nhận diện đúng hành vi vi phạm</strong> và hiểu rõ trách nhiệm công dân trong việc giữ gìn an ninh trật tự. Bây giờ chúng ta vào trang tiếp theo để xem mục tiêu cụ thể.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 2: OBJECTIVES & TOC ============ -->
+  <section class="slide" data-title="Mục tiêu & Mục lục">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <span>Mục tiêu &amp; Lộ trình bài học</span>
+          </div>
+          <h2 class="h2" data-anim="rise-in">Trang bị nhận thức để chủ động phòng ngừa</h2>
+
+          <div class="obj-strip" data-anim="stagger-list">
+            <div class="obj-card interactive-card" data-zoom-title="Mục tiêu về Kiến thức" data-zoom-badge="Mục tiêu Bài 5">
+              <div class="card-head">
+                <span class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+                <h4>Mục tiêu Kiến thức</h4>
+              </div>
+              <p>Nắm vững khái niệm tội xâm phạm danh dự, nhân phẩm; nhận diện các điều luật và công tác phòng, chống theo pháp luật hiện hành.</p>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Trang bị cho người học những kiến thức cơ bản về tội xâm phạm danh dự, nhân phẩm người khác; công tác phòng, chống tội phạm xâm phạm danh dự, nhân phẩm của người khác.</p>
+                <ul>
+                  <li>Hiểu rõ bản chất danh dự, nhân phẩm là những yếu tố tinh thần được Hiến pháp 2013 và Bộ luật Dân sự 2015 bảo vệ tuyệt đối.</li>
+                  <li>Nắm chắc 5 dấu hiệu pháp lý cấu thành tội phạm và hệ thống 4 nhóm tội danh theo Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017).</li>
+                  <li>Phân tích được các nguyên nhân kinh tế, văn hóa – xã hội và bất cập quản lý Nhà nước dẫn tới tình trạng phạm tội.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="obj-card interactive-card" data-zoom-title="Mục tiêu về Kỹ năng" data-zoom-badge="Mục tiêu Bài 5">
+              <div class="card-head">
+                <span class="card-ico alt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+                <h4>Mục tiêu Kỹ năng</h4>
+              </div>
+              <p>Hiểu rõ nghĩa vụ, trách nhiệm của người học; nhận diện sớm dấu hiệu hành vi xâm phạm để góp phần giữ gìn trật tự, an toàn xã hội.</p>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Hiểu rõ nghĩa vụ trách nhiệm của người học trong công tác phòng chống tội xâm phạm danh dự, nhân phẩm của người khác, là cơ sở giúp người học nhận diện những dấu hiệu, hành vi của xâm phạm danh dự, nhân phẩm của người khác góp phần giữ gìn trật tự, an toàn xã hội.</p>
+                <ul>
+                  <li>Biết phân biệt giữa va chạm giao tiếp thông thường với hành vi xúc phạm nghiêm trọng cấu thành tội phạm.</li>
+                  <li>Chủ động bảo vệ bản thân, hỗ trợ nạn nhân và tích cực tham gia phong trào toàn dân đấu tranh phòng, chống tội phạm.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="toc-grid" data-anim="stagger-list">
+            <div class="card toc-item interactive-card" data-zoom-title="Phần 01 · Khái niệm &amp; Cơ sở pháp lý" data-zoom-badge="Mục 1.1">
+              <span class="badge-num">01</span>
+              <div>
+                <h4>Khái niệm &amp; Cơ sở pháp lý</h4>
+                <p>Phân biệt danh dự, nhân phẩm và quyền bất khả xâm phạm được pháp luật bảo hộ.</p>
+                <span class="toc-tag">Điều 19, 20, 21 HP 2013 · Điều 34 BLDS 2015</span>
+              </div>
+              <div class="card-full">
+                <p><strong>Mục 1.1: Khái niệm tội phạm xâm phạm danh dự, nhân phẩm của người khác</strong></p>
+                <ul>
+                  <li><strong>Danh dự:</strong> Sự coi trọng, đánh giá cao của dư luận xã hội đối với một người dựa trên các giá trị tinh thần, đạo đức của người đó.</li>
+                  <li><strong>Nhân phẩm:</strong> Phẩm chất, giá trị riêng của một con người cụ thể, mang tính chất đặc trưng cá nhân trong xã hội.</li>
+                  <li><strong>Cơ sở pháp lý bảo vệ:</strong> Điều 19, Điều 20, Điều 21 Hiến pháp năm 2013 và Điều 34 Bộ luật Dân sự năm 2015 đều khẳng định quyền bất khả xâm phạm về thân thể, sức khỏe, danh dự, nhân phẩm, uy tín của cá nhân.</li>
+                  <li><strong>Hành vi &amp; Tội phạm:</strong> Phân rõ hành vi tác động tinh thần bằng lời nói/hành động và tội phạm hình sự nguy hiểm cho xã hội quy định trong Bộ luật Hình sự.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card toc-item interactive-card" data-zoom-title="Phần 02 · Dấu hiệu pháp lý cấu thành tội phạm" data-zoom-badge="Mục 1.2">
+              <span class="badge-num">02</span>
+              <div>
+                <h4>Dấu hiệu pháp lý cấu thành</h4>
+                <p>5 yếu tố bắt buộc: khách thể, chủ thể, đối tượng tác động, mặt chủ quan &amp; khách quan.</p>
+                <span class="toc-tag">Điều 12 BLHS 2015 (SĐ 2017)</span>
+              </div>
+              <div class="card-full">
+                <p><strong>Mục 1.2: Dấu hiệu pháp lý của các tội xâm phạm danh dự, nhân phẩm của con người</strong></p>
+                <ul>
+                  <li><strong>Khách thể:</strong> Hành vi đã xâm phạm đến quyền được bảo vệ về tính mạng, sức khỏe, danh dự, nhân phẩm của người khác.</li>
+                  <li><strong>Chủ thể:</strong> Căn cứ Điều 12 BLHS 2015 (SĐ 2017), là người đầy đủ năng lực hành vi dân sự, năng lực trách nhiệm hình sự và từ đủ 16 tuổi trở lên.</li>
+                  <li><strong>Đối tượng tác động:</strong> Con người cụ thể (phân biệt với tội phạm tương tự nhưng tác động tới đối tượng không phải con người).</li>
+                  <li><strong>Mặt chủ quan:</strong> Lỗi cố ý trực tiếp.</li>
+                  <li><strong>Mặt khách quan:</strong> Người phạm tội có hành vi bằng lời nói hoặc hành động xúc phạm nghiêm trọng nhân phẩm, danh dự của người khác.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card toc-item interactive-card" data-zoom-title="Phần 03 · Phân loại 4 nhóm tội phạm" data-zoom-badge="Mục 1.3">
+              <span class="badge-num">03</span>
+              <div>
+                <h4>Phân loại 4 nhóm tội phạm</h4>
+                <p>Xâm phạm tình dục, mua bán người, làm nhục – vu khống và các tội phạm khác.</p>
+                <span class="toc-tag">Điều 140 – Điều 156 BLHS 2015</span>
+              </div>
+              <div class="card-full">
+                <p><strong>Mục 1.3: Phân loại các tội phạm xâm phạm danh dự, nhân phẩm (BLHS 2015 số 100/2015/QH13, SĐ 2017)</strong></p>
+                <ul>
+                  <li><strong>a. Các tội xâm phạm tình dục:</strong> Điều 141 đến Điều 147 (7 điều luật, trong đó 5 điều bảo vệ người dưới 16 tuổi / 13–dưới 16 tuổi).</li>
+                  <li><strong>b. Các tội mua bán người:</strong> Điều 150 đến Điều 154 (mua bán người, mua bán/chiếm đoạt người dưới 16 tuổi, đánh tráo trẻ dưới 01 tuổi, mua bán mô hoặc bộ phận cơ thể).</li>
+                  <li><strong>c. Các tội làm nhục người khác:</strong> Điều 140 (hành hạ người khác), Điều 155 (làm nhục người khác), Điều 156 (vu khống).</li>
+                  <li><strong>d. Nhóm tội khác:</strong> Điều 148 &amp; 149 (lây truyền / cố ý truyền HIV cho người khác) và tội chống người thi hành công vụ.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card toc-item interactive-card" data-zoom-title="Phần 04 · Nguyên nhân &amp; Điều kiện phát sinh" data-zoom-badge="Mục 1.4">
+              <span class="badge-num">04</span>
+              <div>
+                <h4>Nguyên nhân &amp; Điều kiện</h4>
+                <p>Tác động từ mặt trái kinh tế thị trường, tàn dư văn hóa cũ và bất cập quản lý.</p>
+                <span class="toc-tag">Mục 1.4 · Gốc rễ &amp; Định hướng phòng ngừa</span>
+              </div>
+              <div class="card-full">
+                <p><strong>Mục 1.4: Nguyên nhân, điều kiện của tình trạng phạm tội danh dự, nhân phẩm</strong></p>
+                <ul>
+                  <li><strong>a. Mặt trái của nền kinh tế thị trường:</strong> Lối sống hưởng thụ xa hoa, trụy lạc; xuống cấp văn hóa, đạo đức; phân hóa xã hội, làm giàu bất chính; người thiếu tư liệu sản xuất ra đô thị làm thuê dễ bị lôi kéo.</li>
+                  <li><strong>b. Hiện tượng xã hội tiêu cực do chế độ cũ để lại &amp; ảnh hưởng ngoại lai:</strong> Hệ quả chiến tranh kéo dài, tư tưởng tham lam, ích kỷ, trọng nam coi thường phụ nữ; tiếp thu thiếu chọn lọc văn hóa phương Tây ở giới trẻ.</li>
+                  <li><strong>c. Bất cập trong quản lý Nhà nước:</strong> Sơ hở quản lý con người, văn hóa, kinh doanh; pháp luật &amp; thực thi còn hạn chế; phong trào quần chúng &amp; tái hòa nhập chưa mạnh; sự thâm nhập tội phạm nước ngoài.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-right">
+          <div class="media-fan" data-fan="2">
+            <figure class="fan-card contain pos-active" data-title="Công an hiệu Công an Nhân dân Việt Nam — Giữ gìn an ninh trật tự" data-source="Nguồn: Wikimedia Commons (Public Domain)">
+              <img src="images/cand-emblem.png" alt="Công an hiệu Công an Nhân dân Việt Nam">
+              <span class="fan-num">1</span>
+              <span class="fan-badge">Công an Nhân dân Việt Nam</span>
+            </figure>
+            <figure class="fan-card pos-left" data-title="Lễ chào cờ tại Quảng trường Ba Đình — Ý thức Quốc phòng – An ninh" data-source="Nguồn: Wikimedia Commons · CC BY 2.0 (shunei1506)">
+              <img src="images/ba-dinh-square.jpg" alt="Quảng trường Ba Đình Hà Nội">
+              <span class="fan-num">2</span>
+              <span class="fan-badge">Quảng trường Ba Đình</span>
+            </figure>
+            <figure class="fan-card contain pos-right" data-title="Quốc huy nước Cộng hòa Xã hội Chủ nghĩa Việt Nam" data-source="Nguồn: Họa sĩ Bùi Trang Chước · Wikimedia Commons (Public Domain)">
+              <img src="images/vietnam-emblem.png" alt="Quốc huy nước CHXHCN Việt Nam">
+              <span class="fan-num">3</span>
+              <span class="fan-badge">Quốc huy CHXHCN Việt Nam</span>
+            </figure>
+          </div>
+          <div class="fan-controls">
+            <div class="fan-thumbs"></div>
+            <div class="fan-actions">
+              <button type="button" class="fan-btn fan-prev" title="Ảnh trước">‹</button>
+              <button type="button" class="fan-btn fan-next" title="Ảnh tiếp">›</button>
+              <button type="button" class="fan-btn fan-toggle">Xòe ảnh</button>
+              <button type="button" class="fan-btn fan-add">+ Thêm ảnh</button>
+              <input type="file" class="fan-add-input" accept="image/*" multiple>
+            </div>
+          </div>
+          <div class="media-cap">
+            <strong>Công an hiệu Công an Nhân dân Việt Nam — Giữ gìn an ninh trật tự</strong>
+            <span>Nguồn: Wikimedia Commons (Public Domain)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="2" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Trước khi đi sâu vào các điều luật, chúng ta cùng thống nhất <strong>hai mục tiêu cốt lõi</strong> của bài học này.</p>
+      <p>Về <em>kiến thức</em>, bạn cần nắm được thế nào là tội xâm phạm danh dự, nhân phẩm và hiểu những quy định pháp luật đang bảo vệ công dân. Về <em>kỹ năng</em>, điều quan trọng hơn là nhận diện được các dấu hiệu phạm tội ngoài đời thực và biết trách nhiệm công dân của mình ở đâu trong việc giữ gìn trật tự, an toàn xã hội.</p>
+      <p>Để đạt được hai mục tiêu đó, nội dung được chia thành <strong>4 phần nối tiếp nhau</strong>: phần 1 làm rõ khái niệm và nền tảng Hiến pháp; phần 2 phân tích 5 dấu hiệu pháp lý; phần 3 đi qua 4 nhóm tội danh trong Bộ luật Hình sự 2015; và phần 4 mổ xẻ các nguyên nhân gốc rễ.</p>
+      <p>Nắm chắc khung này, bạn sẽ thấy các điều luật gắn rất sát với đời sống học đường và xã hội. Chúng ta bắt đầu với phần đầu tiên: phân biệt hai khái niệm nền tảng.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 3: CONCEPTS COMPARISON ============ -->
+  <section class="slide" data-title="1.1 Khái niệm cốt lõi">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split media-left">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>1. Những vấn đề cơ bản · 1.1 Khái niệm nền tảng</span>
+          </div>
+          <h2 class="h2" data-anim="rise-in">Danh dự, nhân phẩm &amp; hành vi xâm phạm</h2>
+
+          <div class="vs-grid">
+            <div class="card vs-card interactive-card" data-anim="fade-left" data-zoom-title="Khái niệm Danh dự &amp; Giá trị tinh thần xã hội" data-zoom-badge="Mục 1.1 · Danh dự">
+              <div class="card-head">
+                <span class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                <div>
+                  <p class="eyebrow">Góc độ dư luận xã hội</p>
+                  <h3 class="h3">Danh dự</h3>
+                </div>
+              </div>
+              <ul>
+                <li>Là <strong>sự coi trọng, đánh giá cao</strong> của dư luận xã hội đối với một người.</li>
+                <li>Hình thành dựa trên các <strong>giá trị tinh thần và đạo đức</strong> của người đó.</li>
+                <li>Thể hiện qua uy tín, sự tôn trọng và tình cảm yêu mến từ xung quanh.</li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Định nghĩa đầy đủ trong tài liệu:</strong></p>
+                <p><strong>Danh dự</strong> là sự coi trọng, đánh giá cao của dư luận xã hội đối với một người dựa trên các giá trị tinh thần, đạo đức của người đó.</p>
+                <p><strong>Danh dự, nhân phẩm của con người</strong> là những yếu tố về tinh thần, bao gồm phẩm chất, giá trị, sự tôn trọng, tình cảm yêu mến của những người xung quanh đối với người đó.</p>
+                <p>Như vậy, danh dự gắn chặt với sự đánh giá, nhìn nhận và uy tín của cá nhân trong mối quan hệ với cộng đồng xã hội xung quanh.</p>
+              </div>
+            </div>
+
+            <div class="vs-mid">⇄</div>
+
+            <div class="card vs-card alt interactive-card" data-anim="fade-right" data-zoom-title="Khái niệm Nhân phẩm của con người" data-zoom-badge="Mục 1.1 · Nhân phẩm">
+              <div class="card-head">
+                <span class="card-ico alt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                <div>
+                  <p class="eyebrow">Góc độ phẩm chất cá nhân</p>
+                  <h3 class="h3">Nhân phẩm</h3>
+                </div>
+              </div>
+              <ul>
+                <li>Là <strong>phẩm chất, giá trị riêng</strong> của một con người cụ thể.</li>
+                <li>Mang tính chất <strong>đặc trưng cá nhân</strong> tồn tại trong cộng đồng xã hội.</li>
+                <li>Là giá trị tinh thần cốt lõi, gắn với lòng tự trọng của mỗi công dân.</li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Định nghĩa đầy đủ trong tài liệu:</strong></p>
+                <p><strong>Nhân phẩm</strong> là phẩm chất, giá trị riêng của một con người cụ thể, mang tính chất đặc trưng cá nhân trong xã hội.</p>
+                <p>Danh dự, nhân phẩm của con người là những yếu tố về tinh thần, bao gồm phẩm chất, giá trị, sự tôn trọng, tình cảm yêu mến của những người xung quanh đối với người đó.</p>
+                <p>Nhân phẩm gắn với giá trị tự thân và lòng tự trọng bên trong của mỗi con người, là quyền cơ bản bất khả xâm phạm được pháp luật bảo vệ.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="banner-grid" data-anim="fade-up">
+            <div class="banner-card interactive-card" data-zoom-title="Hành vi xâm phạm danh dự, nhân phẩm của con người" data-zoom-badge="Mục 1.1 · Hành vi">
+              <b>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--bad)" stroke-width="2.4"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Hành vi xâm phạm danh dự, nhân phẩm
+              </b>
+              <p>Sử dụng <em>lời nói hoặc hành động</em> tác động đến đạo đức, uy tín, phẩm giá → gây tổn thương tinh thần, lòng tự trọng và tâm lý nạn nhân.</p>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Hành vi xâm phạm danh dự, nhân phẩm của con người là hành vi sử dụng lời nói hoặc hành động tác động đến những giá trị đạo đức, uy tín, phẩm giá của một người, gây tổn thương cho người bị tác động.</p>
+                <p>Hành vi xâm phạm danh dự, nhân phẩm không chỉ làm tổn thương đến những giá trị về tinh thần, lòng tự trọng của người bị xúc phạm, ảnh hưởng đến cách nhìn nhận của những người xung quanh đến người bị xúc phạm mà còn tác động trực tiếp đến tâm lý của người bị xúc phạm tùy theo tính chất và mức độ bị xâm phạm.</p>
+              </div>
+            </div>
+
+            <div class="banner-card alt interactive-card" data-zoom-title="Tội xâm phạm nhân phẩm, danh dự của con người" data-zoom-badge="Mục 1.1 · Tội phạm">
+              <b>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.4"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Tội xâm phạm nhân phẩm, danh dự
+              </b>
+              <p>Là hành vi <em>nguy hiểm cho xã hội</em> quy định trong Bộ luật Hình sự, do người đủ năng lực và độ tuổi TNHS thực hiện (cố ý hoặc vô ý).</p>
+              <div class="card-full">
+                <p><strong>Định nghĩa đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Tội xâm phạm nhân phẩm, danh dự của con người là những hành vi nguy hiểm cho xã hội được quy định trong Bộ Luật hình sự, do người có năng lực trách nhiệm hình sự và đủ tuổi chịu trách nhiệm hình sự thực hiện một cách cố ý hoặc vô ý xâm phạm tới quyền được tôn trọng và bảo vệ về nhân phẩm và danh dự được Hiến pháp và pháp luật hình sự ghi nhận và bảo vệ.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-left">
+          <figure class="img-frame contain media-slot" data-slot="3">
+            <img src="images/court-emblem.png" alt="Biểu trưng Tòa án Nhân dân nước CHXHCN Việt Nam">
+            <span class="img-tag">Tòa án Nhân dân</span>
+            <button type="button" class="media-upload-btn" title="Chọn ảnh hoặc video từ máy">+ Đổi ảnh / Video</button>
+            <input type="file" class="media-input" accept="image/*,video/*">
+          </figure>
+          <div class="media-cap">
+            <strong>Biểu trưng Tòa án Nhân dân Việt Nam</strong>
+            <span>Nguồn: Tòa án Nhân dân Tối cao · Wikimedia Commons (Public Domain)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="3" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Khi nghe cụm từ "danh dự, nhân phẩm", nhiều người hay dùng gộp làm một, nhưng về mặt khái niệm chúng có <strong>hai sắc thái khác nhau</strong>.</p>
+      <p><strong>Danh dự</strong> thiên về đánh giá từ bên ngoài—tức là sự coi trọng của dư luận xã hội dành cho một người dựa trên đạo đức và giá trị tinh thần. Còn <strong>nhân phẩm</strong> lại là giá trị tự thân, phẩm chất riêng biệt của từng con người cụ thể trong xã hội.</p>
+      <p>Khi một kẻ xấu dùng <em>lời nói xúc phạm</em> hay <em>hành động sỉ nhục</em>, cả hai yếu tố này đều bị tổn thương: nạn nhân vừa mất lòng tự trọng bên trong, vừa bị ảnh hưởng cái nhìn từ người xung quanh và chịu tác động tâm lý nặng nề.</p>
+      <p>Tuy nhiên, không phải mọi lời nói khó nghe đều là tội phạm. Chỉ khi hành vi đó đủ mức <strong>nguy hiểm cho xã hội</strong>, được quy định trong Bộ luật Hình sự và do người đủ tuổi chịu trách nhiệm hình sự thực hiện thì mới cấu thành tội phạm. Sang trang tiếp theo để xem cơ sở pháp lý nhé.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 4: LEGAL BASIS ============ -->
+  <section class="slide" data-title="Cơ sở pháp lý bảo hộ">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v18M5 8h14M5 8l-2 6h4l-2-6zM19 8l-2 6h4l-2-6z"/></svg>
+            <span>1.1 · Quyền hiến định &amp; Cơ sở pháp lý bảo vệ</span>
+          </div>
+          <h2 class="h2" data-anim="rise-in">Quyền bất khả xâm phạm được luật hóa 3 tầng</h2>
+
+          <div class="grid g3 mt-m" data-anim="stagger-list">
+            <div class="card card-accent interactive-card" data-zoom-title="Điều 19, 20, 21 — Hiến pháp năm 2013" data-zoom-badge="Văn bản tối cao">
+              <div class="card-head">
+                <span class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L3 7v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-9-5z"/></svg></span>
+                <p class="eyebrow" style="margin:0">Văn bản tối cao</p>
+              </div>
+              <div class="law-stat" data-anim="zoom-pop">Điều 19, 20, 21</div>
+              <h4>Hiến pháp năm 2013</h4>
+              <p class="dim">Bảo hộ thân thể, sức khỏe, danh dự, nhân phẩm; nghiêm cấm tra tấn, bạo lực, truy bức, nhục hình dưới mọi hình thức.</p>
+              <div class="card-full">
+                <p>Danh dự, nhân phẩm con người là một trong những quyền cơ bản của công dân, bất khả xâm phạm và luôn được pháp luật bảo vệ, cụ thể tại <strong>Điều 19, Điều 20, Điều 21 Hiến pháp năm 2013</strong>.</p>
+                <blockquote>“Mọi người có quyền bất khả xâm phạm về thân thể, được pháp luật bảo hộ về sức khỏe, danh dự và nhân phẩm; không bị tra tấn, bạo lực, truy bức, nhục hình hay bất kỳ hình thức đối xử nào khác xâm phạm thân thể, sức khoẻ, xúc phạm danh dự, nhân phẩm. Không ai hoặc cơ quan, tổ chức nào có quyền xâm phạm đến danh dự nhân phẩm của người khác, những hành vi xâm phạm đến danh dự nhân phẩm của người khác đều bị pháp luật trừng trị.”</blockquote>
+              </div>
+            </div>
+
+            <div class="card card-accent interactive-card" data-zoom-title="Điều 34 — Bộ luật Dân sự năm 2015" data-zoom-badge="Quyền nhân thân">
+              <div class="card-head">
+                <span class="card-ico alt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg></span>
+                <p class="eyebrow" style="margin:0">Quyền nhân thân</p>
+              </div>
+              <div class="law-stat" data-anim="zoom-pop">Điều 34</div>
+              <h4>Bộ luật Dân sự 2015</h4>
+              <p class="dim">Khẳng định danh dự, nhân phẩm, uy tín của cá nhân là bất khả xâm phạm và luôn được pháp luật bảo vệ.</p>
+              <div class="card-full">
+                <p>Tiếp nối tinh thần của Hiến pháp năm 2013, <strong>Điều 34 Bộ luật Dân sự năm 2015</strong> tiếp tục khẳng định:</p>
+                <blockquote>“Danh dự, nhân phẩm, uy tín của cá nhân là bất khả xâm phạm và được pháp luật bảo vệ.”</blockquote>
+                <p>Đây là nền tảng pháp lý dân sự bảo vệ quyền nhân thân của mọi cá nhân trước các hành vi xâm phạm uy tín, danh dự, nhân phẩm trong đời sống xã hội và trên không gian mạng.</p>
+              </div>
+            </div>
+
+            <div class="card card-accent interactive-card" data-zoom-title="Bộ luật Hình sự năm 2015 (SĐ, BS 2017)" data-zoom-badge="Chế tài hình sự">
+              <div class="card-head">
+                <span class="card-ico bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                <p class="eyebrow" style="margin:0">Chế tài hình sự</p>
+              </div>
+              <div class="law-stat" data-anim="zoom-pop">BLHS 2015</div>
+              <h4>Luật 100/2015/QH13 (SĐ 2017)</h4>
+              <p class="dim">Truy cứu trách nhiệm hình sự đối với mọi hành vi nguy hiểm cho xã hội xâm hại danh dự, nhân phẩm con người.</p>
+              <div class="card-full">
+                <p>Căn cứ vào các văn bản quy phạm pháp luật, đặc biệt là <strong>Bộ luật Hình sự 2015 số 100/2015/QH13 (sửa đổi, bổ sung năm 2017)</strong> của Quốc hội nước ta:</p>
+                <ul>
+                  <li>Quy định cụ thể độ tuổi và năng lực chịu trách nhiệm hình sự tại <strong>Điều 12</strong> (người từ đủ 16 tuổi trở lên).</li>
+                  <li>Phân loại đầy đủ 4 nhóm tội danh xâm phạm danh dự, nhân phẩm từ <strong>Điều 140 đến Điều 156</strong> nhằm trừng trị nghiêm minh mọi hành vi phạm tội.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote-box interactive-card" data-anim="fade-up" data-zoom-title="Trích dẫn Hiến pháp năm 2013 về bảo hộ danh dự, nhân phẩm" data-zoom-badge="Hiến pháp 2013">
+            <blockquote>
+              “Mọi người có quyền bất khả xâm phạm về thân thể, được pháp luật bảo hộ về sức khỏe, danh dự và nhân phẩm; không bị tra tấn, bạo lực, truy bức, nhục hình... Không ai hoặc cơ quan, tổ chức nào có quyền xâm phạm đến danh dự nhân phẩm của người khác, những hành vi xâm phạm đều bị pháp luật trừng trị.”
+            </blockquote>
+            <cite>— Trích tinh thần Hiến pháp nước CHXHCN Việt Nam năm 2013</cite>
+            <div class="card-full">
+              <blockquote>“Mọi người có quyền bất khả xâm phạm về thân thể, được pháp luật bảo hộ về sức khỏe, danh dự và nhân phẩm; không bị tra tấn, bạo lực, truy bức, nhục hình hay bất kỳ hình thức đối xử nào khác xâm phạm thân thể, sức khoẻ, xúc phạm danh dự, nhân phẩm. Không ai hoặc cơ quan, tổ chức nào có quyền xâm phạm đến danh dự nhân phẩm của người khác, những hành vi xâm phạm đến danh dự nhân phẩm của người khác đều bị pháp luật trừng trị”</blockquote>
+              <p>Quy định này xác lập nguyên tắc tối thượng: không một cá nhân, cơ quan hay tổ chức nào được phép xâm phạm danh dự, nhân phẩm của công dân; mọi hành vi vi phạm đều phải chịu sự trừng trị của pháp luật.</p>
+            </div>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-right">
+          <div class="media-fan" data-fan="4">
+            <figure class="fan-card pos-active" data-title="Quốc hội Việt Nam — Cơ quan lập hiến, lập pháp" data-source="Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Phan Minh Tuấn)">
+              <img src="images/photo-04.jpg" alt="Tòa nhà Quốc hội Việt Nam với Quốc kỳ">
+              <span class="fan-num">1</span>
+              <span class="fan-badge">Tòa nhà Quốc hội</span>
+            </figure>
+            <figure class="fan-card contain pos-left" data-title="Quốc huy nước Cộng hòa Xã hội Chủ nghĩa Việt Nam" data-source="Nguồn: Họa sĩ Bùi Trang Chước · Wikimedia Commons (Public Domain)">
+              <img src="images/vietnam-emblem.png" alt="Quốc huy nước CHXHCN Việt Nam">
+              <span class="fan-num">2</span>
+              <span class="fan-badge">Quốc huy CHXHCN Việt Nam</span>
+            </figure>
+            <figure class="fan-card pos-right" data-title="Hội trường Ba Đình — Nơi thông qua các đạo luật lịch sử" data-source="Nguồn: Wikimedia Commons · CC BY-SA 2.0 (Hector Garcia)">
+              <img src="images/ba-dinh-hall.jpg" alt="Hội trường Ba Đình Hà Nội">
+              <span class="fan-num">3</span>
+              <span class="fan-badge">Hội trường Ba Đình</span>
+            </figure>
+          </div>
+          <div class="fan-controls">
+            <div class="fan-thumbs"></div>
+            <div class="fan-actions">
+              <button type="button" class="fan-btn fan-prev" title="Ảnh trước">‹</button>
+              <button type="button" class="fan-btn fan-next" title="Ảnh tiếp">›</button>
+              <button type="button" class="fan-btn fan-toggle">Xòe ảnh</button>
+              <button type="button" class="fan-btn fan-add">+ Thêm ảnh</button>
+              <input type="file" class="fan-add-input" accept="image/*" multiple>
+            </div>
+          </div>
+          <div class="media-cap">
+            <strong>Quốc hội Việt Nam — Cơ quan lập hiến, lập pháp</strong>
+            <span>Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Phan Minh Tuấn)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="4" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Danh dự và nhân phẩm không chỉ là chuẩn mực đạo đức mà là <strong>quyền cơ bản của công dân</strong>, được bảo vệ bởi ba tầng văn bản pháp lý rất rõ ràng.</p>
+      <p>Ở tầng cao nhất, <strong>Điều 19, 20 và 21 Hiến pháp 2013</strong> khẳng định mọi người đều bất khả xâm phạm về thân thể, được bảo hộ về sức khỏe, danh dự và nhân phẩm. Hiến pháp nhấn mạnh: <em>không một cá nhân, cơ quan hay tổ chức nào</em> có quyền chà đạp quyền này.</p>
+      <p>Tiếp nối tinh thần đó, <strong>Điều 34 Bộ luật Dân sự 2015</strong> tiếp tục bảo vệ uy tín và danh dự cá nhân trong các quan hệ dân sự. Còn khi hành vi vượt quá giới hạn, gây nguy hiểm cho xã hội thì <strong>Bộ luật Hình sự 2015 (sửa đổi, bổ sung năm 2017)</strong> sẽ trực tiếp điều chỉnh bằng hình phạt nghiêm khắc.</p>
+      <p>Vậy cơ quan tiến hành tố tụng dựa vào những tiêu chí nào để kết luận một hành vi là tội phạm xâm hại danh dự, nhân phẩm? Chúng ta cùng xem 5 dấu hiệu pháp lý ở slide tiếp theo.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 5: 5 LEGAL ELEMENTS ============ -->
+  <section class="slide" data-title="1.2 Dấu hiệu pháp lý">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split media-left">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span>1.2 · Dấu hiệu pháp lý cấu thành tội phạm</span>
+          </div>
+          <h2 class="h2" data-anim="rise-in">5 dấu hiệu pháp lý nhận diện tội phạm</h2>
+
+          <div class="signs-top" data-anim="stagger-list">
+            <div class="card sign-card interactive-card" data-zoom-title="1. Khách thể của tội phạm" data-zoom-badge="Mục 1.2 · Khách thể">
+              <div class="sign-head">
+                <span class="badge-num">1</span>
+                <h4>Khách thể</h4>
+              </div>
+              <p>Xâm phạm trực tiếp tới <strong>quyền được bảo vệ</strong> về tính mạng, sức khỏe, danh dự và nhân phẩm của người khác.</p>
+              <span class="sign-tag">Quyền bị xâm hại</span>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p><strong>Khách thể:</strong> Hành vi đã xâm phạm đến quyền được bảo vệ về tính mạng, sức khỏe, danh dự nhân phẩm của người khác.</p>
+                <p>Đây là quan hệ xã hội được pháp luật hình sự bảo vệ nhưng bị tội phạm xâm hại trực tiếp, làm tổn thương quyền con người và quyền công dân đã được Hiến pháp ghi nhận.</p>
+              </div>
+            </div>
+
+            <div class="card sign-card interactive-card" data-zoom-title="2. Chủ thể của tội phạm" data-zoom-badge="Điều 12 BLHS 2015">
+              <div class="sign-head">
+                <span class="badge-num">2</span>
+                <h4>Chủ thể</h4>
+              </div>
+              <p>Người có đầy đủ năng lực hành vi dân sự, năng lực trách nhiệm hình sự và <strong>từ đủ 16 tuổi trở lên</strong>.</p>
+              <span class="sign-tag">Điều 12 BLHS 2015</span>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p><strong>Chủ thể:</strong> Căn cứ theo quy định tại <strong>Điều 12 Bộ luật Hình sự năm 2015, sửa đổi, bổ sung năm 2017</strong>, tội phạm xâm phạm danh dự, nhân phẩm của người khác được xác định là những người <strong>đầy đủ năng lực hành vi dân sự, năng lực trách nhiệm hình sự và từ đủ 16 tuổi trở lên</strong>.</p>
+              </div>
+            </div>
+
+            <div class="card sign-card interactive-card" data-zoom-title="3. Đối tượng tác động" data-zoom-badge="Mục 1.2 · Đối tượng">
+              <div class="sign-head">
+                <span class="badge-num">3</span>
+                <h4>Đối tượng tác động</h4>
+              </div>
+              <p>Phải là <strong>con người cụ thể</strong>; giúp phân biệt với tội phạm có hành vi tương tự nhưng tác động đối tượng khác.</p>
+              <span class="sign-tag">Cá nhân xác định</span>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p><strong>Đối tượng tác động:</strong> Con người cụ thể.</p>
+                <p>Điều này để nhằm phân biệt các tội xâm phạm danh dự, nhân phẩm của con người với một số tội phạm cũng có những hành vi phạm tội tương tự nhưng tác động tới đối tượng không phải là con người.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="signs-bottom" data-anim="stagger-list">
+            <div class="card sign-card interactive-card" style="border-top-color:var(--accent-2)" data-zoom-title="4. Mặt chủ quan của tội phạm" data-zoom-badge="Mục 1.2 · Mặt chủ quan">
+              <div class="sign-head">
+                <span class="badge-num" style="background:var(--accent-2)">4</span>
+                <h4>Mặt chủ quan</h4>
+              </div>
+              <p>Người phạm tội thực hiện hành vi với <strong>lỗi cố ý trực tiếp</strong> — nhận thức rõ tính chất nguy hiểm và mong muốn hậu quả xúc phạm xảy ra.</p>
+              <span class="sign-tag">Lỗi cố ý trực tiếp</span>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p><strong>Mặt chủ quan:</strong> Lỗi cố ý trực tiếp.</p>
+                <p>Người thực hiện hành vi nhận thức rõ lời nói hoặc hành động của mình là nguy hiểm cho xã hội, xâm phạm nghiêm trọng đến nhân phẩm, danh dự của người khác, thấy trước hậu quả và mong muốn hậu quả đó xảy ra.</p>
+              </div>
+            </div>
+
+            <div class="card sign-card interactive-card" style="border-top-color:var(--bad)" data-zoom-title="5. Mặt khách quan của tội phạm" data-zoom-badge="Mục 1.2 · Mặt khách quan">
+              <div class="sign-head">
+                <span class="badge-num" style="background:var(--bad)">5</span>
+                <h4>Mặt khách quan</h4>
+              </div>
+              <p>Thể hiện qua hành vi cụ thể bằng <strong>lời nói hoặc hành động</strong> xúc phạm nghiêm trọng đến nhân phẩm, danh dự của nạn nhân.</p>
+              <span class="sign-tag">Hành vi xúc phạm nghiêm trọng</span>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p><strong>Mặt khách quan:</strong> Người phạm tội phải là người có hành vi bằng lời nói hoặc hành động xúc phạm nghiêm trọng nhân phẩm, danh dự của người khác.</p>
+                <p>Mức độ “xúc phạm nghiêm trọng” thể hiện ở việc gây tổn thương sâu sắc tới lòng tự trọng, uy tín, phẩm giá hoặc sức khỏe, tâm lý của người bị tác động.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-left">
+          <figure class="img-frame media-slot" data-slot="5">
+            <img src="images/photo-05.jpg" alt="Trụ sở Tòa án Nhân dân Tối cao Việt Nam">
+            <span class="img-tag">TAND Tối cao</span>
+            <button type="button" class="media-upload-btn" title="Chọn ảnh hoặc video từ máy">+ Đổi ảnh / Video</button>
+            <input type="file" class="media-input" accept="image/*,video/*">
+          </figure>
+          <div class="media-cap">
+            <strong>Trụ sở Tòa án Nhân dân Tối cao (Hà Nội)</strong>
+            <span>Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Tttrung)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="5" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Để xác định một vụ việc có cấu thành tội xâm phạm danh dự, nhân phẩm hay không, pháp luật xem xét đủ <strong>5 dấu hiệu pháp lý</strong> đang hiển thị trên màn hình.</p>
+      <p>Thứ nhất là <strong>khách thể</strong>—hành vi đó phải xâm phạm quyền được bảo vệ về tính mạng, sức khỏe, danh dự, nhân phẩm. Thứ hai là <strong>chủ thể</strong>: căn cứ Điều 12 Bộ luật Hình sự 2015, người thực hiện phải có năng lực trách nhiệm hình sự và <em>từ đủ 16 tuổi trở lên</em>.</p>
+      <p>Thứ ba là <strong>đối tượng tác động</strong>, bắt buộc phải là một con người cụ thể. Thứ tư là <strong>mặt chủ quan</strong>—người phạm tội thực hiện với <em>lỗi cố ý trực tiếp</em>. Và thứ năm là <strong>mặt khách quan</strong>—có hành vi rõ ràng bằng lời nói hoặc hành động xúc phạm nghiêm trọng nạn nhân.</p>
+      <p>Khi hội tụ đủ các dấu hiệu này, hành vi vi phạm sẽ bị xử lý theo từng nhóm tội danh riêng biệt. Tiếp theo, hãy xem tổng quan 4 nhóm tội phạm được Bộ luật Hình sự 2015 phân loại ra sao.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 6: CLASSIFICATION OVERVIEW & CHART ============ -->
+  <section class="slide" data-title="1.3 Tổng quan phân loại">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            <span>1.3 · Phân loại theo Bộ luật Hình sự 2015 (SĐ 2017)</span>
+          </div>
+          <h2 class="h2" data-anim="rise-in">Hệ thống 4 nhóm tội danh xâm hại danh dự, nhân phẩm</h2>
+
+          <div class="grid g4 mt-s" data-anim="stagger-list">
+            <div class="card interactive-card" data-zoom-title="Nhóm 1 · Các tội xâm phạm tình dục (7 điều)" data-zoom-badge="Điều 141 – 147">
+              <p class="eyebrow">Nhóm 1 · Tình dục</p>
+              <div class="kpi-num"><span class="counter" data-to="7">0</span> điều</div>
+              <p class="dim">Điều 141 – Điều 147</p>
+              <div class="card-full">
+                <p><strong>a. Các tội xâm phạm tình dục:</strong> Là những hành vi xâm phạm đến quyền được tôn trọng về danh dự, nhân phẩm của người khác, làm ảnh hưởng đến sự phát triển bình thường cả về thể chất và tinh thần của họ.</p>
+                <p>Gồm: Tội hiếp dâm (Đ.141); Hiếp dâm người dưới 16 tuổi (Đ.142); Cưỡng dâm (Đ.143); Cưỡng dâm người từ đủ 13 tuổi đến dưới 16 tuổi (Đ.144); Giao cấu hoặc thực hiện hành vi quan hệ tình dục khác với người từ đủ 13 tuổi đến dưới 16 tuổi (Đ.145); Dâm ô đối với người dưới 16 tuổi (Đ.146); Sử dụng người dưới 16 tuổi vào mục đích khiêu dâm (Đ.147).</p>
+              </div>
+            </div>
+
+            <div class="card interactive-card" data-zoom-title="Nhóm 2 · Các tội mua bán người (5 điều)" data-zoom-badge="Điều 150 – 154">
+              <p class="eyebrow">Nhóm 2 · Mua bán</p>
+              <div class="kpi-num"><span class="counter" data-to="5">0</span> điều</div>
+              <p class="dim">Điều 150 – Điều 154</p>
+              <div class="card-full">
+                <p><strong>b. Các tội mua bán người (xâm phạm sức khỏe):</strong> Là tội phạm được thực hiện với lỗi cố ý trực tiếp, trong đó người thực hiện hành vi phạm tội xâm phạm đến các quyền cơ bản của nạn nhân như quyền tự do, quyền con người..., coi con người như một món hàng để thực hiện việc trao đổi, mua bán với mục đích kiếm lợi nhuận.</p>
+                <p>Gồm: Mua bán người (Đ.150); Mua bán người dưới 16 tuổi (Đ.151); Đánh tráo người dưới 01 tuổi (Đ.152); Chiếm đoạt người dưới 16 tuổi (Đ.153); Mua bán, chiếm đoạt mô hoặc bộ phận cơ thể người (Đ.154).</p>
+              </div>
+            </div>
+
+            <div class="card interactive-card" data-zoom-title="Nhóm 3 · Các tội làm nhục người khác (3 điều)" data-zoom-badge="Điều 140, 155, 156">
+              <p class="eyebrow">Nhóm 3 · Làm nhục</p>
+              <div class="kpi-num"><span class="counter" data-to="3">0</span> điều</div>
+              <p class="dim">Điều 140, 155, 156</p>
+              <div class="card-full">
+                <p><strong>c. Các tội làm nhục người khác:</strong> Đây là hành vi phạm tội hành hạ người khác xâm phạm đến quyền được bảo hộ về thân thể, sức khỏe, uy tín, danh dự, nhân phẩm của người khác.</p>
+                <p>Quy định tại: <strong>Điều 140</strong> (Tội hành hạ người khác); <strong>Điều 155</strong> (Tội làm nhục người khác); và <strong>Điều 156</strong> (Tội vu khống).</p>
+              </div>
+            </div>
+
+            <div class="card interactive-card" data-zoom-title="Nhóm 4 · Nhóm tội khác (Đ.148, 149 &amp; Chống người THCV)" data-zoom-badge="Nhóm tội khác">
+              <p class="eyebrow">Nhóm 4 · Tội khác</p>
+              <div class="kpi-num"><span class="counter" data-to="3">0</span> nhóm</div>
+              <p class="dim">Đ.148, 149 &amp; THCV</p>
+              <div class="card-full">
+                <p><strong>d. Nhóm tội khác:</strong> Một số tội khác về xâm phạm danh dự, nhân phẩm người khác được pháp luật quy định gồm: tội lây truyền HIV cho người khác (Điều 148), tội cố ý truyền HIV cho người khác (Điều 149 Bộ luật Hình sự 2015), và tội chống người thi hành công vụ.</p>
+                <p>Đây là những hành vi làm tổn thương nghiêm trọng đến cả sức khỏe (nhiễm HIV, suy giảm miễn dịch, tử vong do bệnh cơ hội) lẫn tinh thần của nạn nhân (mặc cảm, lo sợ kỳ thị, khó chứng minh bản thân là nạn nhân).</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card chart-card interactive-card" data-anim="fade-up" data-zoom-title="Phân loại đầy đủ theo Bộ luật Hình sự 2015 (SĐ 2017)" data-zoom-badge="Mục 1.3 · Tổng quan">
+            <h4 style="margin:0 0 8px;">Phân bổ điều luật theo từng nhóm tội danh trong bài</h4>
+            <div class="bar-row">
+              <span class="bar-label">1. Xâm phạm tình dục</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+              <span class="bar-val">7 điều (Đ.141–147)</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">2. Mua bán người</span>
+              <div class="bar-track"><div class="bar-fill" style="width:71%"></div></div>
+              <span class="bar-val">5 điều (Đ.150–154)</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">3. Làm nhục &amp; Vu khống</span>
+              <div class="bar-track"><div class="bar-fill" style="width:43%"></div></div>
+              <span class="bar-val">3 điều (Đ.140,155,156)</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">4. Lây truyền HIV &amp; Khác</span>
+              <div class="bar-track"><div class="bar-fill" style="width:43%"></div></div>
+              <span class="bar-val">Đ.148, 149 &amp; THCV</span>
+            </div>
+            <div class="card-full">
+              <p>Căn cứ vào các văn bản quy phạm pháp luật, đặc biệt là <strong>Bộ luật Hình sự 2015 số 100/2015/QH13 (sửa đổi, bổ sung năm 2017)</strong> của Quốc hội nước ta, các tội phạm xâm phạm danh dự, nhân phẩm được hệ thống hóa thành 4 nhóm chính nêu trên nhằm bảo vệ toàn diện thân thể, sức khỏe, quyền tự do và nhân phẩm công dân.</p>
+            </div>
+          </div>
+
+          <div class="highlight-strip interactive-card" data-zoom-title="Bảo vệ đặc biệt đối với trẻ em dưới 16 tuổi &amp; dưới 01 tuổi" data-zoom-badge="Bảo vệ trẻ em">
+            <span class="card-ico alt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <div><strong>Điểm nhấn pháp lý:</strong> Pháp luật dành mức bảo vệ đặc biệt nghiêm khắc cho <strong>trẻ em dưới 16 tuổi</strong> và <strong>trẻ dưới 01 tuổi</strong> ở cả nhóm tội tình dục và mua bán người.</div>
+            <div class="card-full">
+              <p>Trong hai nhóm tội đầu tiên, pháp luật hình sự Việt Nam dành sự bảo hộ đặc biệt cho trẻ em và người chưa thành niên:</p>
+              <ul>
+                <li><strong>Nhóm xâm phạm tình dục (5/7 điều luật):</strong> Điều 142 (hiếp dâm người dưới 16 tuổi), Điều 144 (cưỡng dâm người từ đủ 13 – dưới 16 tuổi), Điều 145 (giao cấu/QHTD khác với người từ đủ 13 – dưới 16 tuổi), Điều 146 (dâm ô đối với người dưới 16 tuổi), Điều 147 (sử dụng người dưới 16 tuổi vào mục đích khiêu dâm).</li>
+                <li><strong>Nhóm mua bán người (3/5 điều luật):</strong> Điều 151 (mua bán người dưới 16 tuổi), Điều 152 (đánh tráo người dưới 01 tuổi), Điều 153 (chiếm đoạt người dưới 16 tuổi).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-right">
+          <div class="media-fan" data-fan="6">
+            <figure class="fan-card contain pos-active" data-title="Biểu tượng xét xử theo Bộ luật Hình sự" data-source="Nguồn: Wikimedia Commons · CC BY 2.0 (Chris Potter)">
+              <img src="images/photo-06.jpg" alt="Búa xét xử tòa án">
+              <span class="fan-num">1</span>
+              <span class="fan-badge">Búa xét xử Tòa án</span>
+            </figure>
+            <figure class="fan-card contain pos-left" data-title="Biểu trưng Tòa án Nhân dân nước CHXHCN Việt Nam" data-source="Nguồn: Tòa án Nhân dân Tối cao · Wikimedia Commons (Public Domain)">
+              <img src="images/court-emblem.png" alt="Biểu trưng Tòa án Nhân dân">
+              <span class="fan-num">2</span>
+              <span class="fan-badge">Tòa án Nhân dân</span>
+            </figure>
+            <figure class="fan-card pos-right" data-title="Trụ sở Tòa án Nhân dân Tối cao (Hà Nội)" data-source="Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Tttrung)">
+              <img src="images/photo-05.jpg" alt="Trụ sở Tòa án Nhân dân Tối cao">
+              <span class="fan-num">3</span>
+              <span class="fan-badge">TAND Tối cao</span>
+            </figure>
+          </div>
+          <div class="fan-controls">
+            <div class="fan-thumbs"></div>
+            <div class="fan-actions">
+              <button type="button" class="fan-btn fan-prev" title="Ảnh trước">‹</button>
+              <button type="button" class="fan-btn fan-next" title="Ảnh tiếp">›</button>
+              <button type="button" class="fan-btn fan-toggle">Xòe ảnh</button>
+              <button type="button" class="fan-btn fan-add">+ Thêm ảnh</button>
+              <input type="file" class="fan-add-input" accept="image/*" multiple>
+            </div>
+          </div>
+          <div class="media-cap">
+            <strong>Biểu tượng xét xử theo Bộ luật Hình sự</strong>
+            <span>Nguồn: Wikimedia Commons · CC BY 2.0 (Chris Potter)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="6" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Căn cứ vào Bộ luật Hình sự năm 2015, sửa đổi bổ sung năm 2017, tài liệu chia các tội phạm xâm phạm danh dự, nhân phẩm thành <strong>4 nhóm lớn</strong>.</p>
+      <p>Nhìn vào biểu đồ phân bổ, nhóm chiếm số lượng điều luật nhiều nhất là <strong>các tội xâm phạm tình dục</strong> với 7 điều từ Điều 141 đến 147. Tiếp theo là <strong>nhóm tội mua bán người</strong> gồm 5 điều từ Điều 150 đến 154.</p>
+      <p>Nhóm thứ ba là <strong>các tội làm nhục người khác</strong> với 3 điều quen thuộc: Điều 140, Điều 155 và Điều 156. Cuối cùng là <strong>nhóm tội khác</strong> liên quan đến lây truyền HIV tại Điều 148, 149 và tội chống người thi hành công vụ.</p>
+      <p>Bức tranh tổng thể này cho thấy pháp luật bao quát từ xâm hại thân thể nghiêm trọng cho đến xúc phạm uy tín tinh thần, đặc biệt bảo vệ trẻ em dưới 16 tuổi. Ngay sau đây, chúng ta sẽ đi vào chi tiết từng cặp nhóm tội danh.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 7: GROUP 1 & GROUP 2 ============ -->
+  <section class="slide" data-title="Nhóm 1 & 2: Tình dục & Mua bán người">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>1.3.a &amp; 1.3.b · Nhóm tội xâm phạm thân thể &amp; quyền tự do</span>
+          </div>
+          <h2 class="h2" data-anim="rise-in">Tội xâm phạm tình dục &amp; Tội mua bán người</h2>
+
+          <div class="grid g2 mt-s">
+            <div class="card card-accent interactive-card" data-anim="fade-left" data-zoom-title="a. Các tội xâm phạm tình dục (Điều 141 – Điều 147)" data-zoom-badge="Mục 1.3.a · BLHS 2015">
+              <div class="card-head">
+                <span class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                <h4>a. Các tội xâm phạm tình dục</h4>
+              </div>
+              <p class="dim">Ảnh hưởng nặng nề tới danh dự, nhân phẩm và sự phát triển bình thường về <strong>thể chất &amp; tinh thần</strong>.</p>
+              <ul class="law-list">
+                <li><span class="art-pill">Điều 141</span><span>Tội hiếp dâm</span></li>
+                <li><span class="art-pill">Điều 142</span><span>Tội hiếp dâm người dưới 16 tuổi</span></li>
+                <li><span class="art-pill">Điều 143</span><span>Tội cưỡng dâm</span></li>
+                <li><span class="art-pill">Điều 144</span><span>Cưỡng dâm người từ đủ 13 – dưới 16 tuổi</span></li>
+                <li><span class="art-pill">Điều 145</span><span>Giao cấu/QHTD với người 13 – dưới 16 tuổi</span></li>
+                <li><span class="art-pill">Điều 146</span><span>Tội dâm ô đối với người dưới 16 tuổi</span></li>
+                <li><span class="art-pill">Điều 147</span><span>Dùng người dưới 16 tuổi vào mục đích khiêu dâm</span></li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Tội xâm phạm tình dục là những hành vi xâm phạm đến quyền được tôn trọng về danh dự, nhân phẩm của người khác, làm ảnh hưởng đến sự phát triển bình thường cả về thể chất và tinh thần của họ.</p>
+                <p>Nhóm tội xâm phạm tình dục được quy định trong Bộ Luật hình sự năm 2015 (sửa đổi, bổ sung năm 2017) gồm các tội:</p>
+                <ul>
+                  <li><strong>Điều 141:</strong> Tội hiếp dâm</li>
+                  <li><strong>Điều 142:</strong> Tội hiếp dâm người dưới 16 tuổi</li>
+                  <li><strong>Điều 143:</strong> Tội cưỡng dâm</li>
+                  <li><strong>Điều 144:</strong> Tội cưỡng dâm người từ đủ 13 tuổi đến dưới 16 tuổi</li>
+                  <li><strong>Điều 145:</strong> Tội giao cấu hoặc thực hiện hành vi quan hệ tình dục khác với người từ đủ 13 tuổi đến dưới 16 tuổi</li>
+                  <li><strong>Điều 146:</strong> Tội dâm ô đối với người dưới 16 tuổi</li>
+                  <li><strong>Điều 147:</strong> Tội sử dụng người dưới 16 tuổi vào mục đích khiêu dâm</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card card-accent interactive-card" style="border-top-color:var(--accent-2)" data-anim="fade-right" data-zoom-title="b. Các tội mua bán người (Điều 150 – Điều 154)" data-zoom-badge="Mục 1.3.b · BLHS 2015">
+              <div class="card-head">
+                <span class="card-ico alt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span>
+                <h4>b. Các tội mua bán người</h4>
+              </div>
+              <p class="dim">Lỗi <strong>cố ý trực tiếp</strong>; coi con người như món hàng trao đổi kiếm lợi nhuận, tước đoạt quyền tự do &amp; quyền con người.</p>
+              <ul class="law-list">
+                <li><span class="art-pill">Điều 150</span><span>Tội mua bán người</span></li>
+                <li><span class="art-pill">Điều 151</span><span>Tội mua bán người dưới 16 tuổi</span></li>
+                <li><span class="art-pill">Điều 152</span><span>Tội đánh tráo người dưới 01 tuổi</span></li>
+                <li><span class="art-pill">Điều 153</span><span>Tội chiếm đoạt người dưới 16 tuổi</span></li>
+                <li><span class="art-pill">Điều 154</span><span>Mua bán, chiếm đoạt mô hoặc bộ phận cơ thể người</span></li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Là tội phạm được thực hiện với lỗi cố ý trực tiếp trong đó người thực hiện hành vi phạm tội xâm phạm đến các quyền cơ bản của nạn nhân như quyền tự do, quyền con người..., coi con người như một món hàng để thực hiện việc trao đổi, mua bán với mục đích là kiếm lợi nhuận.</p>
+                <p>Tội mua bán người được quy định gồm:</p>
+                <ul>
+                  <li><strong>Điều 150:</strong> Tội mua bán người</li>
+                  <li><strong>Điều 151:</strong> Tội mua bán người dưới 16 tuổi</li>
+                  <li><strong>Điều 152:</strong> Tội đánh tráo người dưới 01 tuổi</li>
+                  <li><strong>Điều 153:</strong> Tội chiếm đoạt người dưới 16 tuổi</li>
+                  <li><strong>Điều 154:</strong> Tội mua bán, chiếm đoạt mô hoặc bộ phận cơ thể người</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-right">
+          <div class="media-fan" data-fan="7">
+            <figure class="fan-card pos-active" data-title="Tượng Công lý che chở trẻ em (Tòa án Middlesbrough)" data-source="Nguồn: Wikimedia Commons · CC BY-SA 2.0 (Oliver Dixon)">
+              <img src="images/photo-03.jpg" alt="Tượng điêu khắc Công lý và bảo vệ trẻ em">
+              <span class="fan-num">1</span>
+              <span class="fan-badge">Công lý &amp; Trẻ em</span>
+            </figure>
+            <figure class="fan-card pos-left" data-title="Tuyên ngôn Quốc tế về Quyền con người (UDHR)" data-source="Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Almanaque Lusofonista)">
+              <img src="images/photo-03-udhr.jpg" alt="Tuyên ngôn Quốc tế về Quyền con người">
+              <span class="fan-num">2</span>
+              <span class="fan-badge">Quyền con người (UDHR)</span>
+            </figure>
+            <figure class="fan-card pos-right" data-title="Hội thảo Bảo vệ Trẻ em — UNICEF Việt Nam tại Hà Nội" data-source="Nguồn: USAID Vietnam / UNICEF · Wikimedia Commons (Public Domain)">
+              <img src="images/photo-10.jpg" alt="Hội thảo Bảo vệ Trẻ em UNICEF Việt Nam">
+              <span class="fan-num">3</span>
+              <span class="fan-badge">UNICEF Việt Nam</span>
+            </figure>
+          </div>
+          <div class="fan-controls">
+            <div class="fan-thumbs"></div>
+            <div class="fan-actions">
+              <button type="button" class="fan-btn fan-prev" title="Ảnh trước">‹</button>
+              <button type="button" class="fan-btn fan-next" title="Ảnh tiếp">›</button>
+              <button type="button" class="fan-btn fan-toggle">Xòe ảnh</button>
+              <button type="button" class="fan-btn fan-add">+ Thêm ảnh</button>
+              <input type="file" class="fan-add-input" accept="image/*" multiple>
+            </div>
+          </div>
+          <div class="media-cap">
+            <strong>Tượng Công lý che chở trẻ em (Tòa án Middlesbrough)</strong>
+            <span>Nguồn: Wikimedia Commons · CC BY-SA 2.0 (Oliver Dixon)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="7" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Chúng ta đi vào hai nhóm tội phạm có tính chất đặc biệt nghiêm trọng đầu tiên.</p>
+      <p>Ở cột bên trái là <strong>các tội xâm phạm tình dục</strong> từ Điều 141 đến Điều 147. Điểm bạn cần đặc biệt lưu ý là có tới <em>5 trên 7 điều luật</em> dành riêng để bảo vệ trẻ em và người chưa thành niên dưới 16 tuổi—từ hiếp dâm, cưỡng dâm, giao cấu cho đến dâm ô và sử dụng vào mục đích khiêu dâm.</p>
+      <p>Sang cột bên phải là <strong>các tội mua bán người</strong> từ Điều 150 đến Điều 154. Bản chất của nhóm này là kẻ phạm tội cố ý biến con người thành một thứ hàng hóa để kiếm lời, thậm chí bao gồm cả hành vi đánh tráo trẻ dưới 1 tuổi hay mua bán mô, bộ phận cơ thể người.</p>
+      <p>Cả hai nhóm này đều tước đoạt quyền tự do, xâm hại sâu sắc cả thể xác lẫn nhân phẩm nạn nhân. Vậy còn những hành vi xúc phạm bằng lời nói, vu khống hay lây truyền bệnh nguy hiểm thì xếp vào đâu? Mời bạn xem slide tiếp theo.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 8: GROUP 3 & GROUP 4 ============ -->
+  <section class="slide" data-title="Nhóm 3 & 4: Làm nhục & Tội khác">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split media-left">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>1.3.c &amp; 1.3.d · Xâm hại uy tín, tinh thần &amp; sức khỏe</span>
+          </div>
+          <h2 class="h2" data-anim="rise-in">Tội làm nhục người khác &amp; Nhóm tội khác</h2>
+
+          <div class="grid g2 mt-s" data-anim="stagger-list">
+            <div class="card card-accent interactive-card" data-zoom-title="c. Các tội làm nhục người khác (Điều 140, 155, 156)" data-zoom-badge="Mục 1.3.c · BLHS 2015">
+              <div class="card-head">
+                <span class="card-ico warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+                <h4>c. Các tội làm nhục người khác</h4>
+              </div>
+              <p class="dim">Hành hạ, xúc phạm nghiêm trọng quyền bảo hộ về thân thể, sức khỏe, uy tín, danh dự, nhân phẩm.</p>
+              <ul class="law-list">
+                <li><span class="art-pill">Điều 140</span><span><strong>Tội hành hạ người khác</strong> — đối xử tàn ác với người lệ thuộc.</span></li>
+                <li><span class="art-pill">Điều 155</span><span><strong>Tội làm nhục người khác</strong> — xúc phạm nghiêm trọng nhân phẩm, danh dự.</span></li>
+                <li><span class="art-pill">Điều 156</span><span><strong>Tội vu khống</strong> — bịa đặt, loan truyền điều sai sự thật.</span></li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Đây là hành vi phạm tội hành hạ người khác xâm phạm đến quyền được bảo hộ về thân thể, sức khỏe, uy tín, danh dự, nhân phẩm của người khác.</p>
+                <ul>
+                  <li><strong>Điều 140:</strong> Tội hành hạ người khác.</li>
+                  <li><strong>Điều 155:</strong> Tội làm nhục người khác.</li>
+                  <li><strong>Điều 156:</strong> Tội vu khống.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card card-accent interactive-card" style="border-top-color:var(--bad)" data-zoom-title="d. Nhóm tội khác (Điều 148, 149 &amp; Chống người THCV)" data-zoom-badge="Mục 1.3.d · BLHS 2015">
+              <div class="card-head">
+                <span class="card-ico bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+                <h4>d. Nhóm tội khác</h4>
+              </div>
+              <p class="dim">Gây tổn thương nặng nề đồng thời cho sức khỏe thể chất và tâm lý xã hội của nạn nhân.</p>
+              <ul class="law-list">
+                <li><span class="art-pill">Điều 148</span><span><strong>Tội lây truyền HIV</strong> cho người khác.</span></li>
+                <li><span class="art-pill">Điều 149</span><span><strong>Tội cố ý truyền HIV</strong> cho người khác.</span></li>
+                <li><span class="art-pill">Tội khác</span><span><strong>Chống người thi hành công vụ</strong> (xâm phạm uy tín, danh dự người thực thi).</span></li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Một số tội khác về xâm phạm danh dự, nhân phẩm người khác được pháp luật quy định:</p>
+                <ul>
+                  <li><strong>Điều 148 Bộ luật Hình sự 2015:</strong> Tội lây truyền HIV cho người khác.</li>
+                  <li><strong>Điều 149 Bộ luật Hình sự 2015:</strong> Tội cố ý truyền HIV cho người khác.</li>
+                  <li><strong>Tội chống người thi hành công vụ.</strong></li>
+                </ul>
+                <p>Đây là những hành vi phạm tội làm tổn thương đến sức khỏe và tinh thần của nạn nhân.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="impact-box interactive-card" data-anim="fade-up" data-zoom-title="Hệ lụy kép đối với nạn nhân bị lây truyền / cố ý truyền HIV" data-zoom-badge="Mục 1.3.d · Hệ lụy">
+            <b>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--bad)" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Hệ lụy kép đối với nạn nhân bị lây truyền / cố ý truyền HIV:
+            </b>
+            <div class="impact-grid">
+              <div><strong>Về sức khỏe thể chất:</strong> Nhiễm HIV, suy giảm hệ miễn dịch và nguy cơ tử vong do các bệnh cơ hội.</div>
+              <div><strong>Về tinh thần &amp; xã hội:</strong> Mang tâm lý mặc cảm, lo sợ kỳ thị; dễ bị quy chụp “tệ nạn xã hội” và khó tự chứng minh bản thân là nạn nhân.</div>
+            </div>
+            <div class="card-full">
+              <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+              <p>Đây là những hành vi phạm tội làm tổn thương đến sức khỏe và tinh thần của nạn nhân.</p>
+              <ul>
+                <li><strong>Về sức khỏe:</strong> Nạn nhân của những hành vi phạm tội này sẽ bị nhiễm HIV, suy giảm hệ miễn dịch và tử vong do các bệnh cơ hội.</li>
+                <li><strong>Về tinh thần:</strong> Nạn nhân thường mang tâm lý mặc cảm, lo sợ người khác kỳ thị; thường bị quy chụp là “vi phạm các tệ nạn xã hội” và khó có khả năng chứng minh bản thân là nạn nhân.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-left">
+          <div class="media-fan" data-fan="8">
+            <figure class="fan-card pos-active" data-title="Ruy-băng Đỏ — Phòng chống HIV/AIDS &amp; xóa bỏ kỳ thị" data-source="Nguồn: Nhà Trắng Hoa Kỳ · Wikimedia Commons (Public Domain)">
+              <img src="images/photo-08.jpg" alt="Dải ruy-băng Đỏ biểu tượng phòng chống HIV/AIDS">
+              <span class="fan-num">1</span>
+              <span class="fan-badge">Ngày Thế giới phòng chống AIDS</span>
+            </figure>
+            <figure class="fan-card pos-left" data-title="Tượng đài Ruy-băng Đỏ vì phẩm giá người sống chung với HIV" data-source="Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Ulli 2mecs)">
+              <img src="images/aids-ribbon.jpg" alt="Tượng đài Ruy-băng Đỏ tại Berlin">
+              <span class="fan-num">2</span>
+              <span class="fan-badge">Chống kỳ thị HIV</span>
+            </figure>
+            <figure class="fan-card pos-right" data-title="Tôn trọng quyền con người và nhân phẩm nạn nhân" data-source="Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Almanaque Lusofonista)">
+              <img src="images/photo-03-udhr.jpg" alt="Quyền con người bất khả xâm phạm">
+              <span class="fan-num">3</span>
+              <span class="fan-badge">Bảo vệ nhân phẩm</span>
+            </figure>
+          </div>
+          <div class="fan-controls">
+            <div class="fan-thumbs"></div>
+            <div class="fan-actions">
+              <button type="button" class="fan-btn fan-prev" title="Ảnh trước">‹</button>
+              <button type="button" class="fan-btn fan-next" title="Ảnh tiếp">›</button>
+              <button type="button" class="fan-btn fan-toggle">Xòe ảnh</button>
+              <button type="button" class="fan-btn fan-add">+ Thêm ảnh</button>
+              <input type="file" class="fan-add-input" accept="image/*" multiple>
+            </div>
+          </div>
+          <div class="media-cap">
+            <strong>Ruy-băng Đỏ — Phòng chống HIV/AIDS &amp; xóa bỏ kỳ thị</strong>
+            <span>Nguồn: Nhà Trắng Hoa Kỳ · Wikimedia Commons (Public Domain)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="8" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Tiếp theo là hai nhóm tội phạm rất dễ gặp trong đời sống hàng ngày và trên không gian mạng.</p>
+      <p>Ở thẻ thứ nhất là <strong>nhóm tội làm nhục người khác</strong> với ba điều luật cốt lõi: Điều 140 về <em>hành hạ người khác</em>, Điều 155 về <em>làm nhục người khác</em> và Điều 156 về <em>vu khống</em>. Chỉ cần một hành động bêu riếu hay bịa đặt thông tin sai sự thật đủ mức độ nghiêm trọng là đã có thể bị xử lý hình sự.</p>
+      <p>Ở thẻ thứ hai là <strong>nhóm tội khác</strong>, gồm tội lây truyền HIV (Điều 148), cố ý truyền HIV (Điều 149) và tội chống người thi hành công vụ. Tài liệu đặc biệt nhấn mạnh <em>hệ lụy kép</em> của hành vi truyền HIV: nạn nhân không chỉ suy giảm miễn dịch, đối mặt nguy cơ tử vong mà còn mang mặc cảm nặng nề, sợ bị xã hội kỳ thị và rất khó chứng minh mình vô tội.</p>
+      <p>Hiểu rõ các loại tội phạm rồi, câu hỏi đặt ra là: vì sao trong xã hội hiện đại vẫn tồn tại những hành vi này? Hãy cùng phân tích nguyên nhân ở slide 9.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 9: CAUSES & CONDITIONS ============ -->
+  <section class="slide" data-title="1.4 Nguyên nhân & Điều kiện">
+    <div class="fx-layer" data-fx="constellation"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 0 1 0 4h-.09c-.66 0-1.25.4-1.51 1z"/></svg>
+            <span>1.4 · Nguyên nhân &amp; Điều kiện phát sinh tội phạm</span>
+          </div>
+          <h2 class="h2" data-anim="rise-in">3 nhóm nguyên nhân phát sinh tội phạm</h2>
+
+          <div class="pillar-stack" data-anim="stagger-list">
+            <div class="card pillar-row interactive-card" data-zoom-title="a. Sự tác động bởi những mặt trái của nền kinh tế thị trường" data-zoom-badge="Mục 1.4.a · Kinh tế">
+              <div class="card-head">
+                <span class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                <h4>a. Tác động từ mặt trái của nền kinh tế thị trường</h4>
+              </div>
+              <ul>
+                <li>Lối sống hưởng thụ xa hoa, trụy lạc; sự <strong>xuống cấp nhiều mặt về văn hóa, đạo đức</strong>.</li>
+                <li>Phân hóa xã hội, một bộ phận <strong>làm giàu bất chính</strong> dẫn tới phạm tội; người thiếu tư liệu sản xuất ra đô thị làm thuê dễ bị lôi kéo.</li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Nền kinh tế thị trường, bên cạnh những mặt ưu điểm cũng bộc lộ nhiều mặt trái trở thành những nguyên nhân làm phát sinh tội phạm như:</p>
+                <ul>
+                  <li>Lối sống hưởng thụ xa hoa, trụy lạc của một bộ phận người trong xã hội; sự xuống cấp nhiều mặt về văn hóa, đạo đức, lối sống.</li>
+                  <li>Phân hóa xã hội khiến một bộ phận giàu lên nhanh chóng trong đó có một số người làm giàu bất chính từ đó dẫn đến phạm tội.</li>
+                  <li>Mặt khác, không ít người không có tư liệu sản xuất phải ra thành phố, thị xã làm thuê kiếm sống bị tác động bởi những hiện tượng tiêu cực dễ dẫn đến phạm tội.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card pillar-row c2 interactive-card" data-zoom-title="b. Tác động của những hiện tượng xã hội tiêu cực do chế độ cũ để lại" data-zoom-badge="Mục 1.4.b · Xã hội &amp; Văn hóa">
+              <div class="card-head">
+                <span class="card-ico warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+                <h4>b. Tàn dư xã hội cũ &amp; ảnh hưởng văn hóa ngoại lai</h4>
+              </div>
+              <ul>
+                <li>Tàn dư tư tưởng chế độ cũ và hệ quả chiến tranh kéo dài (tư tưởng tham lam, ích kỷ, <em>trọng nam coi thường phụ nữ</em>).</li>
+                <li>Tiếp thu <strong>thiếu chọn lọc</strong> văn hóa phương Tây qua hoạt động văn hóa, xã hội — nhất là trong thế hệ trẻ.</li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <p>Những tàn dư của chế độ cũ về mặt tư tưởng cùng với hệ quả chiến tranh kéo dài trong nhiều năm có tác động lớn đến các hiện tượng tiêu cực của xã hội, trong đó có tình trạng tội phạm xâm phạm danh dự nhân phẩm con người.</p>
+                <ul>
+                  <li>Một số vấn đề đặt ra cho xã hội như: lối sống hưởng thụ, ích kỷ, sa đọa trụy lạc; tư tưởng tham lam; tư tưởng trọng nam, coi thường phụ nữ trong một bộ phận nhân dân.</li>
+                  <li>Tác động của văn hóa phương Tây qua các hoạt động văn hóa, xã hội... sự tiếp thu không có chọn lọc của một bộ phận không nhỏ người dân, nhất là thế hệ trẻ.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card pillar-row c3 interactive-card" data-zoom-title="c. Công tác quản lý của Nhà nước một số lĩnh vực còn nhiều bất cập" data-zoom-badge="Mục 1.4.c · Quản lý Nhà nước">
+              <div class="card-head">
+                <span class="card-ico bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg></span>
+                <h4>c. Bất cập trong công tác quản lý của Nhà nước &amp; xã hội</h4>
+              </div>
+              <ul>
+                <li>Sơ hở quản lý con người, văn hóa, kinh doanh; hệ thống pháp luật &amp; thực thi còn hạn chế, chính sách chậm đổi mới.</li>
+                <li>Đấu tranh của cơ quan chức năng &amp; <strong>phong trào quần chúng</strong> chưa mạnh; thâm nhập của tội phạm xuyên quốc gia.</li>
+              </ul>
+              <div class="card-full">
+                <p><strong>Nội dung đầy đủ theo tài liệu Bài 5:</strong></p>
+                <ul>
+                  <li>Sơ hở thiếu sót trong quản lý con người, quản lý văn hóa, quản lý nghề nghiệp kinh doanh... và những hạn chế trong giáo dục đạo đức, lối sống, nâng cao trình độ văn hóa của người dân.</li>
+                  <li>Hệ thống pháp luật chưa hoàn thiện, việc thực thi pháp luật kém hiệu quả, một số chính sách về kinh tế, xã hội còn chậm đổi mới tạo sơ hở cho tội phạm hoạt động phát triển.</li>
+                  <li>Công tác tổ chức và đấu tranh phòng, chống tội phạm của các cơ quan chức năng còn bộc lộ nhiều hạn chế. Một số nơi chưa thực sự mạnh mẽ, chưa hiệu quả.</li>
+                  <li>Phong trào quần chúng tham gia đấu tranh chống tội phạm ở một số nơi chưa thực sự mạnh mẽ, chưa hiệu quả. Chưa phát huy được sức mạnh của quần chúng nhân dân trong công tác giáo dục, cải tạo và tái hòa nhập cộng đồng cho người phạm tội.</li>
+                  <li>Sự thâm nhập ảnh hưởng của tội phạm, tệ nạn xã hội của các quốc gia khác.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-right">
+          <div class="media-fan" data-fan="9">
+            <figure class="fan-card pos-active" data-title="Đô thị hóa &amp; Tác động mặt trái kinh tế thị trường (TP.HCM)" data-source="Nguồn: Wikimedia Commons · CC0 Public Domain (Pimnl)">
+              <img src="images/photo-09.jpg" alt="Toàn cảnh đô thị TP. Hồ Chí Minh">
+              <span class="fan-num">1</span>
+              <span class="fan-badge">Đô thị TP. Hồ Chí Minh</span>
+            </figure>
+            <figure class="fan-card pos-left" data-title="Phát triển đô thị ven sông Sài Gòn — Chuyển dịch lao động" data-source="Nguồn: Wikimedia Commons · CC BY-SA 3.0 (Diego Delso)">
+              <img src="images/saigon-river.jpg" alt="Sông Sài Gòn và khu đô thị mới">
+              <span class="fan-num">2</span>
+              <span class="fan-badge">Sông Sài Gòn · Lao động đô thị</span>
+            </figure>
+            <figure class="fan-card pos-right" data-title="Quốc hội hoàn thiện pháp luật &amp; quản lý Nhà nước" data-source="Nguồn: Wikimedia Commons · CC BY-SA 4.0 (Grayswoodsurrey)">
+              <img src="images/photo-01.jpg" alt="Tòa nhà Quốc hội Việt Nam">
+              <span class="fan-num">3</span>
+              <span class="fan-badge">Hoàn thiện quản lý Nhà nước</span>
+            </figure>
+          </div>
+          <div class="fan-controls">
+            <div class="fan-thumbs"></div>
+            <div class="fan-actions">
+              <button type="button" class="fan-btn fan-prev" title="Ảnh trước">‹</button>
+              <button type="button" class="fan-btn fan-next" title="Ảnh tiếp">›</button>
+              <button type="button" class="fan-btn fan-toggle">Xòe ảnh</button>
+              <button type="button" class="fan-btn fan-add">+ Thêm ảnh</button>
+              <input type="file" class="fan-add-input" accept="image/*" multiple>
+            </div>
+          </div>
+          <div class="media-cap">
+            <strong>Đô thị hóa &amp; Tác động mặt trái kinh tế thị trường (TP.HCM)</strong>
+            <span>Nguồn: Wikimedia Commons · CC0 Public Domain (Pimnl)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="9" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Để phòng chống hiệu quả, chúng ta cần nhìn thẳng vào <strong>3 nhóm nguyên nhân</strong> làm phát sinh tội phạm xâm hại danh dự, nhân phẩm.</p>
+      <p>Thứ nhất là <strong>mặt trái của kinh tế thị trường</strong>. Bên cạnh động lực phát triển, nó kéo theo lối sống hưởng thụ, thực dụng, làm giàu bất chính và phân hóa xã hội, khiến những người lao động xa quê thiếu ổn định dễ bị tác động tiêu cực.</p>
+      <p>Thứ hai là <strong>tàn dư xã hội cũ và tác động văn hóa ngoại lai</strong>. Tư tưởng ích kỷ, coi thường phụ nữ vẫn còn rơi rớt ở một bộ phận người dân, cộng thêm việc một số bạn trẻ tiếp thu văn hóa phương Tây thiếu chọn lọc.</p>
+      <p>Thứ ba là <strong>bất cập trong quản lý Nhà nước</strong>: từ sơ hở quản lý văn hóa, kinh doanh, sự chậm đổi mới của chính sách pháp luật cho tới việc phong trào quần chúng tham gia giáo dục, tái hòa nhập cộng đồng còn yếu và sự thâm nhập của tệ nạn xuyên quốc gia. Nhận diện đúng cả ba gốc rễ này chính là chìa khóa cho slide tổng kết.</p>
+    </aside>
+  </section>
+
+  <!-- ============ SLIDE 10: CLOSING & TAKEAWAYS ============ -->
+  <section class="slide" data-title="Tổng kết & Hành động">
+    <div class="fx-layer" data-fx="orbit-ring"></div>
+    <div class="deck-header">
+      <span class="hdr-left">
+        <svg class="hdr-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+        GIÁO DỤC QUỐC PHÒNG
+      </span>
+      <span class="hdr-right">
+        <span>HCMUTE</span>
+        <label class="logo-slot" title="Bấm hoặc kéo-thả logo trường HCMUTE vào đây">
+          <img class="hcmute-logo" src="images/hcmute-logo.png" alt="Logo HCMUTE">
+          <input type="file" class="logo-input" accept="image/*">
+        </label>
+      </span>
+    </div>
+
+    <div class="slide-body">
+      <div class="stage-split">
+        <div class="content-col">
+          <div class="kicker-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            <span>Tổng kết bài học · Trách nhiệm người học</span>
+          </div>
+          <h1 class="h1" data-anim="rise-in" style="font-size:64px;">
+            Tôn trọng nhân phẩm —<br>
+            <span class="gradient-text">Thượng tôn pháp luật</span>
+          </h1>
+          <p class="lede">
+            Mỗi sinh viên là một mắt xích quan trọng trong phong trào toàn dân bảo vệ an ninh Tổ quốc, góp phần xây dựng môi trường học đường và xã hội an toàn, văn minh.
+          </p>
+
+          <div class="action-stack" data-anim="stagger-list">
+            <div class="card action-card interactive-card" data-zoom-title="1. Nhận diện sớm dấu hiệu, hành vi xâm phạm" data-zoom-badge="Trách nhiệm #1">
+              <div class="card-head">
+                <span class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                <h4>1. Nhận diện sớm</h4>
+              </div>
+              <p>Phân biệt rõ dấu hiệu xâm phạm danh dự, nhân phẩm ngoài đời thực và trên không gian mạng theo BLHS 2015.</p>
+              <div class="card-full">
+                <p><strong>Cơ sở nhận diện theo Mục tiêu Bài 5:</strong></p>
+                <p>Người học nắm vững khái niệm và 5 dấu hiệu pháp lý cấu thành tội phạm (khách thể, chủ thể từ đủ 16 tuổi theo Điều 12 BLHS 2015, đối tượng là con người cụ thể, lỗi cố ý trực tiếp, hành vi xúc phạm nghiêm trọng bằng lời nói hoặc hành động).</p>
+                <p>Qua đó nhận diện kịp thời các hành vi thuộc 4 nhóm tội danh: xâm phạm tình dục (Đ.141–147), mua bán người (Đ.150–154), làm nhục/vu khống/hành hạ (Đ.140, 155, 156) và lây truyền/cố ý truyền HIV (Đ.148, 149).</p>
+              </div>
+            </div>
+
+            <div class="card action-card interactive-card" data-zoom-title="2. Ứng xử văn minh, rèn luyện đạo đức &amp; chọn lọc văn hóa" data-zoom-badge="Trách nhiệm #2">
+              <div class="card-head">
+                <span class="card-ico good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></span>
+                <h4>2. Ứng xử văn minh</h4>
+              </div>
+              <p>Rèn luyện đạo đức, tiếp thu văn hóa có chọn lọc; nói không với vu khống, sỉ nhục hay kỳ thị người yếu thế.</p>
+              <div class="card-full">
+                <p><strong>Khắc phục nguyên nhân chủ quan từ nhận thức &amp; lối sống:</strong></p>
+                <ul>
+                  <li>Chủ động phòng tránh lối sống hưởng thụ xa hoa, ích kỷ, thực dụng từ mặt trái của nền kinh tế thị trường.</li>
+                  <li>Loại bỏ các tàn dư tư tưởng lạc hậu như trọng nam coi thường phụ nữ.</li>
+                  <li>Tỉnh táo, tiếp thu có chọn lọc các giá trị văn hóa phương Tây trong hoạt động văn hóa, xã hội; không kỳ thị nạn nhân bị tổn thương về thể chất và tinh thần.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card action-card interactive-card" data-zoom-title="3. Chủ động phòng ngừa, tố giác &amp; phát huy sức mạnh cộng đồng" data-zoom-badge="Trách nhiệm #3">
+              <div class="card-head">
+                <span class="card-ico bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+                <h4>3. Chủ động tố giác</h4>
+              </div>
+              <p>Tự bảo vệ bản thân, hỗ trợ nạn nhân và tích cực tham gia phong trào quần chúng giữ gìn trật tự an toàn xã hội.</p>
+              <div class="card-full">
+                <p><strong>Nghĩa vụ và trách nhiệm của người học trong công tác phòng, chống tội phạm:</strong></p>
+                <ul>
+                  <li>Hiểu rõ nghĩa vụ, trách nhiệm công dân trong bảo vệ quyền bất khả xâm phạm về thân thể, sức khỏe, danh dự và nhân phẩm theo Hiến pháp 2013 &amp; BLDS 2015.</li>
+                  <li>Tích cực hưởng ứng phong trào quần chúng tham gia đấu tranh chống tội phạm, kịp thời phát hiện và tố giác hành vi vi phạm tới cơ quan chức năng.</li>
+                  <li>Góp phần nâng cao hiệu quả công tác giáo dục, cải tạo và giúp người từng lầm lỗi tái hòa nhập cộng đồng, giữ vững trật tự, an toàn xã hội.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="row wrap mt-l" style="gap:16px;">
+            <span class="pill pill-accent">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.9 8.6L22 9.3L16.6 14L18.2 21L12 17.3L5.8 21L7.4 14L2 9.3L9.1 8.6L12 2Z"/></svg>
+              Cảm ơn đã lắng nghe!
+            </span>
+            <span class="pill">Hỏi &amp; Đáp (Q&amp;A)</span>
+            <span class="pill">Tiểu đội 7 · HCMUTE</span>
+          </div>
+        </div>
+        <div class="media-col" data-anim="fade-right">
+          <div class="media-fan" data-fan="10">
+            <figure class="fan-card pos-active" data-title="Ngày Công tác Xã hội Thế giới — Bảo vệ trẻ em (Hà Nội)" data-source="Nguồn: USAID Vietnam / UNICEF · Wikimedia Commons (Public Domain)">
+              <img src="images/photo-10.jpg" alt="Hội thảo Công tác Xã hội vì hạnh phúc con người">
+              <span class="fan-num">1</span>
+              <span class="fan-badge">UNICEF Việt Nam</span>
+            </figure>
+            <figure class="fan-card contain pos-left" data-title="Phối hợp lực lượng chức năng giữ gìn trật tự, an toàn xã hội" data-source="Nguồn: Wikimedia Commons (Public Domain)">
+              <img src="images/cand-emblem.png" alt="Công an hiệu Công an Nhân dân Việt Nam">
+              <span class="fan-num">2</span>
+              <span class="fan-badge">An ninh trật tự xã hội</span>
+            </figure>
+            <figure class="fan-card pos-right" data-title="Thượng tôn pháp luật — Bảo vệ an ninh Tổ quốc" data-source="Nguồn: Wikimedia Commons · CC BY 2.0 (shunei1506)">
+              <img src="images/ba-dinh-square.jpg" alt="Lễ chào cờ tại Quảng trường Ba Đình">
+              <span class="fan-num">3</span>
+              <span class="fan-badge">Bảo vệ An ninh Tổ quốc</span>
+            </figure>
+          </div>
+          <div class="fan-controls">
+            <div class="fan-thumbs"></div>
+            <div class="fan-actions">
+              <button type="button" class="fan-btn fan-prev" title="Ảnh trước">‹</button>
+              <button type="button" class="fan-btn fan-next" title="Ảnh tiếp">›</button>
+              <button type="button" class="fan-btn fan-toggle">Xòe ảnh</button>
+              <button type="button" class="fan-btn fan-add">+ Thêm ảnh</button>
+              <input type="file" class="fan-add-input" accept="image/*" multiple>
+            </div>
+          </div>
+          <div class="media-cap">
+            <strong>Ngày Công tác Xã hội Thế giới — Bảo vệ trẻ em (Hà Nội)</strong>
+            <span>Nguồn: USAID Vietnam / UNICEF · Wikimedia Commons (Public Domain)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck-footer">
+      <span>Tiểu đội 7</span>
+      <span class="slide-number" data-current="10" data-total="10"></span>
+    </div>
+    <aside class="notes">
+      <p>Vậy là chúng ta đã đi hết 4 nội dung trọng tâm của Bài 5. Trước khi kết thúc, Tiểu đội 7 xin gửi lại <strong>3 thông điệp hành động</strong> dành cho mỗi sinh viên.</p>
+      <p>Thứ nhất, <strong>nhận diện sớm</strong>: hiểu rằng danh dự và nhân phẩm là quyền bất khả xâm phạm được Hiến pháp và Bộ luật Hình sự bảo hộ chặt chẽ, gắn liền với nhiệm vụ giữ gìn an ninh trật tự.</p>
+      <p>Thứ hai, <strong>ứng xử văn minh</strong>: bắt đầu từ chính lời nói và hành động hàng ngày—không vu khống, không sỉ nhục, không kỳ thị người yếu thế và tỉnh táo chọn lọc giá trị văn hóa phù hợp.</p>
+      <p>Thứ ba, <strong>chủ động tố giác</strong>: khi phát hiện dấu hiệu xâm phạm tình dục, mua bán người hay hành hạ, làm nhục người khác, hãy lên tiếng bảo vệ nạn nhân và báo ngay cho cơ quan chức năng. Cảm ơn thầy cô và các bạn đã chú ý lắng nghe—bây giờ chúng ta chuyển sang phần hỏi đáp!</p>
+    </aside>
+  </section>
+
+  <!-- Floating Hover Popover (appears at hovered card position, auto-closes on mouseleave) -->
+  <div class="hover-popover" id="hover-popover" aria-hidden="true">
+    <div class="pop-head">
+      <div class="pop-title-wrap">
+        <span class="card-ico" id="pop-icon"></span>
+        <h3 id="pop-title"></h3>
+      </div>
+      <span class="pop-badge" id="pop-badge"></span>
+    </div>
+    <div class="pop-body" id="pop-body"></div>
+  </div>
+
+</div>
+
+<script src="assets/runtime.js"></script>
+<script src="assets/animations/fx-runtime.js"></script>
+<script>
+  /* Interactive local media slot loader + shared HCMUTE logo uploader + Interactive Zoomable Cards */
+  (function () {
+    /* 1. Media slots */
+    function loadMediaFile(slot, file) {
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      const isVideo = file.type.startsWith('video/');
+      const oldMedia = slot.querySelector('img, video');
+      let el;
+      if (isVideo) {
+        el = document.createElement('video');
+        el.src = url;
+        el.controls = true;
+        el.autoplay = true;
+        el.loop = true;
+        el.muted = true;
+        el.playsInline = true;
+      } else {
+        el = document.createElement('img');
+        el.src = url;
+        el.alt = file.name;
+      }
+      if (oldMedia) oldMedia.replaceWith(el);
+      else slot.prepend(el);
+      slot.classList.add('is-custom');
+      const tag = slot.querySelector('.img-tag');
+      if (tag) tag.textContent = isVideo ? 'Video' : 'Ảnh';
+    }
+
+    document.querySelectorAll('.media-slot').forEach((slot) => {
+      const btn = slot.querySelector('.media-upload-btn');
+      const input = slot.querySelector('.media-input');
+      if (btn && input) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          input.click();
+        });
+        input.addEventListener('change', () => {
+          if (input.files && input.files[0]) loadMediaFile(slot, input.files[0]);
+        });
+      }
+      slot.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        slot.classList.add('drag-over');
+      });
+      slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+      slot.addEventListener('drop', (e) => {
+        e.preventDefault();
+        slot.classList.remove('drag-over');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          loadMediaFile(slot, e.dataTransfer.files[0]);
+        }
+      });
+    });
+
+    /* 2. Sync university logo upload across all 10 slides */
+    function applyUniversityLogo(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        const dataUrl = ev.target.result;
+        document.querySelectorAll('.hcmute-logo').forEach((img) => {
+          img.src = dataUrl;
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+
+    document.querySelectorAll('.logo-slot').forEach((slot) => {
+      const input = slot.querySelector('.logo-input');
+      if (input) {
+        input.addEventListener('change', () => {
+          if (input.files && input.files[0]) applyUniversityLogo(input.files[0]);
+        });
+      }
+      slot.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        slot.classList.add('drag-over');
+      });
+      slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+      slot.addEventListener('drop', (e) => {
+        e.preventDefault();
+        slot.classList.remove('drag-over');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          applyUniversityLogo(e.dataTransfer.files[0]);
+        }
+      });
+    });
+
+    /* 3. Keep each slide's own page number intact */
+    const slides = document.querySelectorAll('.slide');
+    const syncNumbers = () => {
+      slides.forEach((s, idx) => {
+        const el = s.querySelector('.slide-number');
+        if (el) {
+          el.setAttribute('data-current', idx + 1);
+          el.setAttribute('data-total', slides.length);
+        }
+      });
+    };
+    const mo = new MutationObserver(syncNumbers);
+    slides.forEach((s) => mo.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    syncNumbers();
+
+    /* 4. Interactive Hover Popover anchored at hovered card (auto-closes on mouseleave) */
+    const deck = document.querySelector('.deck');
+    const popover = document.getElementById('hover-popover');
+    const popTitle = document.getElementById('pop-title');
+    const popBadge = document.getElementById('pop-badge');
+    const popIcon = document.getElementById('pop-icon');
+    const popBody = document.getElementById('pop-body');
+
+    let activeSource = null;
+
+    function showPopover(card) {
+      if (activeSource && activeSource !== card) {
+        activeSource.classList.remove('is-zoom-source');
+      }
+      activeSource = card;
+      activeSource.classList.add('is-zoom-source');
+
+      const titleText = card.getAttribute('data-zoom-title') || (card.querySelector('h4,h3,b') || {}).textContent || 'Chi tiết nội dung';
+      const badgeText = card.getAttribute('data-zoom-badge') || '';
+      const fullEl = card.querySelector('.card-full');
+      const iconEl = card.querySelector('.card-ico, .badge-num');
+
+      popTitle.textContent = titleText;
+      popBadge.textContent = badgeText;
+      popBadge.style.display = badgeText ? '' : 'none';
+
+      if (iconEl) {
+        popIcon.innerHTML = iconEl.innerHTML;
+        popIcon.className = iconEl.classList.contains('badge-num') ? 'card-ico' : iconEl.className;
+        popIcon.style.display = 'inline-flex';
+      } else {
+        popIcon.style.display = 'none';
+      }
+
+      popBody.innerHTML = fullEl ? fullEl.innerHTML : card.innerHTML;
+
+      /* Compute target position in 1920x1080 deck coordinate space */
+      const deckRect = deck.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const scale = deckRect.width / 1920 || 1;
+
+      const cardCx = (cardRect.left - deckRect.left + cardRect.width / 2) / scale;
+      const cardCy = (cardRect.top - deckRect.top + cardRect.height / 2) / scale;
+
+      const pw = popover.offsetWidth || 740;
+      const ph = popover.offsetHeight || 360;
+
+      const minX = 36;
+      const maxX = 1920 - pw - 36;
+      const minY = 72;
+      const maxY = 1080 - ph - 58;
+
+      const popX = Math.max(minX, Math.min(maxX, cardCx - pw / 2));
+      const popY = Math.max(minY, Math.min(maxY, cardCy - ph / 2));
+
+      const originX = Math.max(10, Math.min(90, ((cardCx - popX) / pw) * 100));
+      const originY = Math.max(10, Math.min(90, ((cardCy - popY) / ph) * 100));
+
+      const wasOpen = popover.classList.contains('open');
+      if (!wasOpen) {
+        popover.style.transition = 'none';
+        popover.style.setProperty('--pop-x', popX.toFixed(1) + 'px');
+        popover.style.setProperty('--pop-y', popY.toFixed(1) + 'px');
+        popover.style.setProperty('--pop-origin-x', originX.toFixed(1) + '%');
+        popover.style.setProperty('--pop-origin-y', originY.toFixed(1) + '%');
+        void popover.offsetWidth;
+        popover.style.transition = '';
+      } else {
+        popover.style.setProperty('--pop-x', popX.toFixed(1) + 'px');
+        popover.style.setProperty('--pop-y', popY.toFixed(1) + 'px');
+        popover.style.setProperty('--pop-origin-x', originX.toFixed(1) + '%');
+        popover.style.setProperty('--pop-origin-y', originY.toFixed(1) + '%');
+      }
+
+      popover.classList.add('open');
+      popover.setAttribute('aria-hidden', 'false');
+    }
+
+    function hidePopover() {
+      if (activeSource) {
+        activeSource.classList.remove('is-zoom-source');
+        activeSource = null;
+      }
+      popover.classList.remove('open');
+      popover.setAttribute('aria-hidden', 'true');
+    }
+
+    document.querySelectorAll('.interactive-card').forEach((card) => {
+      card.addEventListener('mouseenter', () => showPopover(card));
+      card.addEventListener('mouseleave', () => {
+        if (activeSource === card) hidePopover();
+      });
+    });
+
+    /* Close automatically whenever navigating to another slide */
+    const slideCloseMo = new MutationObserver(() => {
+      if (popover.classList.contains('open')) hidePopover();
+    });
+    slides.forEach((s) => slideCloseMo.observe(s, { attributes: true, attributeFilter: ['class'] }));
+
+    /* 5. Full-viewport Constellation background FX (edge-to-edge across entire screen) */
+    const globalFxEl = document.getElementById('global-fx-layer');
+    let globalFxHandle = null;
+    function startGlobalConstellation() {
+      if (!globalFxEl || document.documentElement.getAttribute('data-preview') === '1') return;
+      if (!window.HPX || typeof window.HPX['constellation'] !== 'function') return false;
+      if (globalFxHandle && typeof globalFxHandle.stop === 'function') globalFxHandle.stop();
+      globalFxHandle = window.HPX['constellation'](globalFxEl);
+      return true;
+    }
+    if (!startGlobalConstellation()) {
+      let tries = 0;
+      const fxWait = setInterval(() => {
+        if (startGlobalConstellation() || ++tries > 60) clearInterval(fxWait);
+      }, 80);
+    }
+    const themeFxMo = new MutationObserver(() => {
+      setTimeout(startGlobalConstellation, 60);
+    });
+    themeFxMo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    /* 6. Interactive Fanned Photo Deck (.media-fan): hover spread, click to select, thumbnails, + add photos */
+    document.querySelectorAll('.media-col').forEach((col) => {
+      const fan = col.querySelector('.media-fan');
+      if (!fan) return;
+      const thumbsEl = col.querySelector('.fan-thumbs');
+      const prevBtn = col.querySelector('.fan-prev');
+      const nextBtn = col.querySelector('.fan-next');
+      const toggleBtn = col.querySelector('.fan-toggle');
+      const addBtn = col.querySelector('.fan-add');
+      const addInput = col.querySelector('.fan-add-input');
+      const capEl = col.querySelector('.media-cap');
+
+      let activeIdx = 0;
+
+      function getCards() {
+        return Array.from(fan.querySelectorAll('.fan-card'));
+      }
+
+      function renderFan() {
+        const cards = getCards();
+        if (!cards.length) return;
+        activeIdx = ((activeIdx % cards.length) + cards.length) % cards.length;
+
+        cards.forEach((c, i) => {
+          c.classList.remove('pos-active', 'pos-left', 'pos-right', 'pos-back');
+          const offset = (i - activeIdx + cards.length) % cards.length;
+          if (offset === 0) c.classList.add('pos-active');
+          else if (offset === 1) c.classList.add('pos-right');
+          else if (offset === cards.length - 1) c.classList.add('pos-left');
+          else c.classList.add('pos-back');
+
+          const numEl = c.querySelector('.fan-num');
+          if (numEl) numEl.textContent = String(i + 1);
+        });
+
+        /* Update caption & official source attribution */
+        const activeCard = cards[activeIdx];
+        if (capEl && activeCard) {
+          const title = activeCard.getAttribute('data-title') || '';
+          const source = activeCard.getAttribute('data-source') || '';
+          capEl.innerHTML = '<strong>' + title + '</strong><span>' + source + '</span>';
+        }
+
+        /* Rebuild thumbnail strip */
+        if (thumbsEl) {
+          thumbsEl.innerHTML = '';
+          cards.forEach((c, i) => {
+            const img = c.querySelector('img');
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'fan-thumb' + (i === activeIdx ? ' active' : '');
+            btn.title = c.getAttribute('data-title') || ('Ảnh ' + (i + 1));
+            if (img) {
+              const tImg = document.createElement('img');
+              tImg.src = img.src;
+              tImg.alt = '';
+              btn.appendChild(tImg);
+            }
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              activeIdx = i;
+              renderFan();
+            });
+            thumbsEl.appendChild(btn);
+          });
+        }
+      }
+
+      function bindCardClicks() {
+        getCards().forEach((c, i) => {
+          if (c.dataset.bound) return;
+          c.dataset.bound = '1';
+          c.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const cards = getCards();
+            const idx = cards.indexOf(c);
+            if (idx === activeIdx) {
+              fan.classList.toggle('is-fanned');
+              if (toggleBtn) toggleBtn.textContent = fan.classList.contains('is-fanned') ? 'Thu gọn' : 'Xòe ảnh';
+            } else {
+              activeIdx = idx;
+              renderFan();
+            }
+          });
+        });
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        activeIdx--;
+        renderFan();
+      });
+      if (nextBtn) nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        activeIdx++;
+        renderFan();
+      });
+      if (toggleBtn) toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fan.classList.toggle('is-fanned');
+        toggleBtn.textContent = fan.classList.contains('is-fanned') ? 'Thu gọn' : 'Xòe ảnh';
+      });
+      if (addBtn && addInput) {
+        addBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          addInput.click();
+        });
+        addInput.addEventListener('change', () => {
+          const files = Array.from(addInput.files || []).filter((f) => f.type.startsWith('image/'));
+          if (!files.length) return;
+          files.forEach((file) => {
+            const url = URL.createObjectURL(file);
+            const fig = document.createElement('figure');
+            fig.className = 'fan-card';
+            fig.setAttribute('data-title', file.name.replace(/\.[^.]+$/, ''));
+            fig.setAttribute('data-source', 'Ảnh tải lên từ máy cá nhân');
+            fig.innerHTML = '<img src="' + url + '" alt=""><span class="fan-num"></span><span class="fan-badge">' + file.name + '</span>';
+            fan.appendChild(fig);
+          });
+          bindCardClicks();
+          activeIdx = getCards().length - 1;
+          renderFan();
+        });
+      }
+
+      bindCardClicks();
+      renderFan();
+    });
+  })();
+</script>
+</body>
+</html>

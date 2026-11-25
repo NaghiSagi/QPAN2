@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="960" rx="32" fill="url(#bg)"/>
+  <rect width="800" height="960" rx="32" fill="url(#grid)"/>
+  <circle cx="660" cy="150" r="180" fill="#3b82f6" opacity="0.14"/>
+  <circle cx="140" cy="800" r="220" fill="#ef4444" opacity="0.12"/>
+  
+    <polygon points="400,200 635,640 165,640" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
+    <circle cx="400" cy="230" r="95" fill="rgba(59,130,246,0.32)" stroke="#60a5fa" stroke-width="4"/>
+    <text x="400" y="224" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="800" fill="#ffffff">KINH TẾ</text>
+    <text x="400" y="254" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" fill="#dbeafe">Mặt trái thị trường</text>
+
+    <circle cx="215" cy="600" r="98" fill="rgba(245,158,11,0.3)" stroke="#fbbf24" stroke-width="4"/>
+    <text x="215" y="594" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="800" fill="#ffffff">XÃ HỘI</text>
+    <text x="215" y="624" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" fill="#fef3c7">Tàn dư &amp; Ngoại lai</text>
+
+    <circle cx="585" cy="600" r="98" fill="rgba(239,68,68,0.3)" stroke="#f87171" stroke-width="4"/>
+    <text x="585" y="594" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="800" fill="#ffffff">QUẢN LÝ</text>
+    <text x="585" y="624" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" fill="#fee2e2">Sơ hở &amp; Thực thi</text>
+
+    <text x="400" y="470" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="800" fill="#ffffff">NGUYÊN NHÂN</text>
+    <text x="400" y="502" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#94a3b8">Tác động tổng hợp</text>
+  
+  <rect x="44" y="40" width="320" height="46" rx="23" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.22)"/>
+  <text x="204" y="69" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#ffffff" letter-spacing="1.4">1.4 · NGUYÊN NHÂN</text>
+  <rect x="44" y="838" width="712" height="80" rx="18" fill="rgba(10,16,32,0.58)" stroke="rgba(255,255,255,0.18)"/>
+  <text x="400" y="886" text-anchor="middle" font-family="Inter,Segoe UI,sans-serif" font-size="22" font-weight="700" fill="#ffffff">BA GỐC RỄ PHÁT SINH TỘI PHẠM</text>
+</svg>
